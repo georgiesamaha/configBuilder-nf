@@ -16,7 +16,7 @@ python3 configBuilder
 * Simple HPC config builder that submits tasks as jobs to scheduler or local tasks
 * Preloads modules with `beforeScript` operator 
 * Set max walltime, cpu, memory for queue
-* TODO: tower functionality included 
+* TODO: Tower functionality option 
 * TODO: Ask if want to trace resource usage for efficiency evaluation
 * TODO: Set number of retries with increasing resources 
 
