@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+from modules import nxfconfigBuilder, nfconfigBuilder
+from colorama import Fore, Style, init
+
+# Initialize colorama
+init(autoreset=True)
+
+# Print start-up message
+print(f"{Fore.CYAN}  ____             __ _       ____        _ _     _           ")
+print(f"{Fore.CYAN} / ___|___  _ __  / _(_) __ _| __ ) _   _(_) | __| | ___ _ __ ")
+print(f"{Fore.CYAN}| |   / _ \| '_ \| |_| |/ _` |  _ \| | | | | |/ _` |/ _ \ '__|")
+print(f"{Fore.CYAN}| |__| (_) | | | |  _| | (_| | |_) | |_| | | | (_| |  __/ |   ")
+print(f"{Fore.CYAN} \____\___/|_| |_|_| |_|\__, |____/ \__,_|_|_|\__,_|\___|_|   ")
+print(f"{Fore.CYAN}                        |___/                                ")
+
+print(f"""
+{Fore.WHITE}This script helps you to build a Nextflow config file for your HPC 
+based on your specified job scheduler and resources. Follow the prompts 
+to specify your settings.
+""")
+
+# Prompt the user for their desired configuration type
+config_type = input(f"{Fore.YELLOW}What type of configuration would you like to build?\n1. Custom Nextflow workflow\n2. nf-core pipeline\n\nPlease enter custom or nf-core: \n")
+
+# Call the appropriate function based on user input
+if config_type == "custom":
+    nxfconfigBuilder()
+elif config_type == "nf-core":
+    nfconfigBuilder()
+else:
+    print(f"{Fore.RED}Invalid selection. Please run the script again and enter either custom or nf-core.")
