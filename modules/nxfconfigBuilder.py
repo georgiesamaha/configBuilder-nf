@@ -68,6 +68,8 @@ def nxfconfigBuilder():
             break
         else:
             print(Fore.RED + "Invalid input! Please enter 'yes' or 'no'." + Style.RESET_ALL)
+
+    enable_singularity = input(Fore.CYAN + "Do you want to enable singularity? (yes/no) " + Style.RESET_ALL).lower() == 'yes'
     
     # Write outputs to custom configuration file
     output_file = input(Fore.YELLOW + "Enter the output file name (default is 'custom_nextflow.config'): " + Style.RESET_ALL)
@@ -75,6 +77,11 @@ def nxfconfigBuilder():
 
     with open(output_file, 'w') as f:
         f.write("// Custom Nextflow config file \n\n")
+        if enable_singularity:
+            f.write("singularity {\n")
+            f.write("    enabled = true\n")
+            f.write("    cache = lenient\n")
+            f.write("}\n\n")
         f.write("process {\n")
         f.write(f"    executor = '{executor}'\n")
         if queue:
@@ -88,7 +95,7 @@ def nxfconfigBuilder():
         if walltime is not None:
             f.write(f"    time = '{walltime}h'\n")
         for config in process_specific_configs:
-            f.write(f"    \nwithName: {config['name']} {{\n")
+            f.write(f"    withName: {config['name']} {{\n")
             f.write(f"        executor = '{config['executor']}'\n")
             if config['queue']:
                 f.write(f"        queue = '{config['queue']}'\n")
@@ -97,4 +104,6 @@ def nxfconfigBuilder():
             if config['walltime'] is not None:
                 f.write(f"        time = '{config['walltime']}h'\n")
             f.write("    }\n")
-        f.write("}\n\n")
+        f.write("}\n")
+
+    print(Fore.GREEN + "Configuration file successfully written." + Style.RESET_ALL)
