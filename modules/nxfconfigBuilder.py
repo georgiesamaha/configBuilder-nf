@@ -49,6 +49,11 @@ def nxfconfigBuilder():
     # Enter the amount of memory available on the queue 
     memory = ask_for_input(Fore.MAGENTA + "What is the max amount of memory in GB available on this queue (default is 1)? ", type_=int, min_=1)
     memory = memory if memory else 1
+
+    # Enter the maxiumum walltime for the queue 
+    # See: https://www.nextflow.io/docs/latest/process.html?highlight=cpus#time
+    walltime = ask_for_input(Fore.MAGENTA + "What is the max walltime available on this queue (default is 0.5h)? ", type_=float, min_=0.5)
+    walltime = walltime if walltime else 0.5
     
     # Name custom config file
     output_file = input(Fore.YELLOW + "Enter the output file name (default is 'custom_nextflow.config'): " + Style.RESET_ALL)
@@ -65,5 +70,7 @@ def nxfconfigBuilder():
         if clusterOptions:
             f.write(f"    clusterOptions = '{clusterOptions}'\n")
         f.write(f"    cpus = {cpus}\n")
-        f.write(f"    memory = '{memory} GB'\n")
-        f.write("}")
+        f.write(f"    memory = '{memory}GB'\n")
+        f.write(f"    time = '{walltime}h'\n")
+        f.write("}\n\n")
+
