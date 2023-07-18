@@ -18,6 +18,7 @@ Currently can only specify `custom` pipeline configuration. nf-core configuratio
 * Simple HPC config builder that submits tasks as jobs to scheduler or local tasks
 * Preloads modules with `beforeScript` operator 
 * Set max walltime, cpu, memory for queue
+* Set process-specific scope as needed 
 * Enable Singularity 
 * TODO: Tower functionality option 
 * TODO: Ask if want to trace resource usage for efficiency evaluation
@@ -25,6 +26,14 @@ Currently can only specify `custom` pipeline configuration. nf-core configuratio
 
 ## nf-core config builder 
 
+* Simple HPC config builder that submits tasks as jobs to scheduler or local tasks
+* Preloads modules with `beforeScript` operator 
+* Set max_time, max_cpu, max_memory for workflow
+* Set process-specific scope as needed 
 * TODO: assign queue based on flexible resource requrements
 * TODO: explore if pipeline-specific features are required
 * TODO: explore withLabel resource requirements 
+
+## Workflow resource usage evaluation 
+
+* TODO: scope functionality 
