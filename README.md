@@ -11,8 +11,6 @@ Execute with:
 python3 configBuilder
 ```
 
-Currently can only specify `custom` pipeline configuration. nf-core configuration script not written. 
-
 ## Nextflow config builder 
 
 * Simple HPC config builder that submits tasks as jobs to scheduler or local tasks
