@@ -21,20 +21,23 @@ def nxfconfigBuilder():
                 return val
         raise ValueError('Invalid Input')
 
-    # Set defaults
+    # Set default values for required inputs 
     queue = None
     module = 'nextflow'
     clusterOptions = ''
 
+    # Define executor, can only be one supported by Nextflow
     executor = input(Fore.MAGENTA + "What executor does your system use (default is 'local')? \nFor more information, see https://www.nextflow.io/docs/latest/executor.html \n" + Style.RESET_ALL)
     executor = executor if executor else 'local'
 
+    # If executor define queue, modules to pre-load and clusterOptions to apply to each process
     if executor in ['pbspro', 'slurm', 'azure batch', 'aws batch', 'bridge', 'flux', 'lsf', 'moab', 'oar', 'nqsii', 'pbs', 'sge']:
         queue = input(Fore.MAGENTA + "What queue would you like to run your jobs on? \nFor more information, see https://www.nextflow.io/docs/latest/process.html#queue \n" + Style.RESET_ALL)
         module = input(Fore.MAGENTA + "What modules and versions should be loaded before executing each process (default is 'nextflow')? \nFor more information, see https://www.nextflow.io/docs/latest/process.html#beforescript \n" + Style.RESET_ALL)
         module = module if module else 'nextflow'
         clusterOptions = input(Fore.MAGENTA + "What cluster options should be applied to each process execution? \nFor more information, see https://www.nextflow.io/docs/latest/process.html#clusteroptions \n" + Style.RESET_ALL)
 
+    # Define cpu, memory, walltime limits regardless of if local or executor
     cpus = ask_for_input(Fore.MAGENTA + "What is the max number of CPUs available on this queue (default is 1)? \nFor more information, see https://www.nextflow.io/docs/latest/process.html#cpus \n", type_=int, min_=1)
     cpus = cpus if cpus else 1
     memory = ask_for_input(Fore.MAGENTA + "What is the max amount of memory in GB available on this queue (default is 1)? \nFor more information, see https://www.nextflow.io/docs/latest/process.html#memory \n", type_=int, min_=1)
@@ -68,9 +71,21 @@ def nxfconfigBuilder():
             break
         else:
             print(Fore.RED + "Invalid input! Please enter 'yes' or 'no'." + Style.RESET_ALL)
-
-    enable_singularity = input(Fore.CYAN + "Do you want to enable singularity? (yes/no) " + Style.RESET_ALL).lower() == 'yes'
     
+    # Enable singularity 
+    while True:
+        enable_singularity_input = input(Fore.CYAN + "Do you want to enable singularity? (yes/no) " + Style.RESET_ALL).lower()
+        if enable_singularity_input == 'yes':
+            enable_singularity = True
+            singularity_cache = input(Fore.CYAN + "Enter the path to your Singularity cache directory: " + Style.RESET_ALL)
+            break
+        elif enable_singularity_input == 'no':
+            enable_singularity = False
+            break
+        else:
+            print(Fore.RED + "Invalid input! Please enter 'yes' or 'no'." + Style.RESET_ALL)
+
+
     # Write outputs to custom configuration file
     output_file = input(Fore.YELLOW + "Enter the output file name (default is 'custom_nextflow.config'): " + Style.RESET_ALL)
     output_file = output_file if output_file else 'custom_nextflow.config'
@@ -81,6 +96,8 @@ def nxfconfigBuilder():
             f.write("singularity {\n")
             f.write("    enabled = true\n")
             f.write("    cache = lenient\n")
+            f.write("    singularity.autoMounts = true\n")
+            f.write("    NXF_SINGULARITY_CACHEDIR= {singularity_cache} \n")
             f.write("}\n\n")
         f.write("process {\n")
         f.write(f"    executor = '{executor}'\n")
@@ -106,4 +123,4 @@ def nxfconfigBuilder():
             f.write("    }\n")
         f.write("}\n")
 
-    print(Fore.GREEN + "Configuration file successfully written." + Style.RESET_ALL)
+    print(Fore.GREEN + "Configuration file {output_file} successfully written." + Style.RESET_ALL)
