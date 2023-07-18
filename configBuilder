@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-from modules import nxfconfigBuilder, nfconfigBuilder
+from modules import nxfconfigBuilder, nfconfigBuilder, nxfEvaluate
 from colorama import Fore, Style, init
 
-# Initialize colorama
+# Initialise colorama
 init(autoreset=True)
 
 # Print start-up message
@@ -11,7 +11,7 @@ print(f"{Fore.CYAN} / ___|___  _ __  / _(_) __ _| __ ) _   _(_) | __| | ___ _ __
 print(f"{Fore.CYAN}| |   / _ \| '_ \| |_| |/ _` |  _ \| | | | | |/ _` |/ _ \ '__|")
 print(f"{Fore.CYAN}| |__| (_) | | | |  _| | (_| | |_) | |_| | | | (_| |  __/ |   ")
 print(f"{Fore.CYAN} \____\___/|_| |_|_| |_|\__, |____/ \__,_|_|_|\__,_|\___|_|   ")
-print(f"{Fore.CYAN}                        |___/                                ")
+print(f"{Fore.CYAN}                        |___/                                 ")
 
 print(f"""
 {Fore.WHITE}This script helps you to build a Nextflow config file for your HPC 
@@ -20,12 +20,12 @@ to specify your settings.
 """)
 
 # Prompt user for their desired action 
-action = input(f"{Fore.GREEN}What would you like to do?\n1. Build an HPC config \n2. Evaluate resource configuration \n\nPlease enter build or evaluate: \n\n" + Style.RESET_ALL)
+action = input(f"{Fore.GREEN}What would you like to do?\n1. Build an HPC config \n2. Evaluate a run's resource usage \n\nPlease enter build or evaluate: \n" + Style.RESET_ALL)
 
 # Call function based on input
 if action == "build":
     # Prompt the user for their desired configuration type
-    config_type = input(f"{Fore.YELLOW}What type of configuration would you like to build?\n1. Custom Nextflow workflow\n2. nf-core pipeline\n\nPlease enter custom or nf-core: \n\n" + Style.RESET_ALL)
+    config_type = input(f"{Fore.YELLOW}What type of configuration would you like to build?\n1. Custom Nextflow workflow\n2. nf-core pipeline\n\nPlease enter custom or nf-core: \n" + Style.RESET_ALL)
     if config_type == "custom":
         nxfconfigBuilder()
     elif config_type == "nf-core":

@@ -1,6 +1,6 @@
 from colorama import Fore, Style, init
 
-# Initialize colorama
+# Initialise colorama
 init(autoreset=True)
 
 def nxfconfigBuilder():
@@ -97,7 +97,7 @@ def nxfconfigBuilder():
             f.write("    enabled = true\n")
             f.write("    cache = lenient\n")
             f.write("    singularity.autoMounts = true\n")
-            f.write("    NXF_SINGULARITY_CACHEDIR= {singularity_cache} \n")
+            f.write("    NXF_SINGULARITY_CACHEDIR = {singularity_cache} \n")
             f.write("}\n\n")
         f.write("process {\n")
         f.write(f"    executor = '{executor}'\n")
