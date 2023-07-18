@@ -3,6 +3,7 @@ from colorama import Fore, Style, init
 # Initialise colorama
 init(autoreset=True)
 
+# Erroneous input handler 
 def nxfconfigBuilder():
     def ask_for_input(prompt, type_=None, min_=None, max_=None, num_of_attempts=3):
         for _ in range(num_of_attempts):
