@@ -19,18 +19,11 @@ based on your specified job scheduler and resources. Follow the prompts
 to specify your settings.
 """)
 
-# Prompt user for their desired action 
-action = input(f"{Fore.GREEN}What would you like to do?\n1. Build an HPC config \n2. Evaluate a run's resource usage \n\nPlease enter build or evaluate: \n" + Style.RESET_ALL)
-
-# Call function based on input
-if action == "build":
-    # Prompt the user for their desired configuration type
-    config_type = input(f"{Fore.YELLOW}What type of configuration would you like to build?\n1. Custom Nextflow workflow\n2. nfcore pipeline\n\nPlease enter custom or nfcore: \n" + Style.RESET_ALL)
-    if config_type == "custom":
-        nxfconfigBuilder()
-    elif config_type == "nfcore":
-        nfconfigBuilder()
-elif action == "evaluate":
-    nfEvaluate()
+# Prompt user for desired action 
+config_type = input(f"{Fore.GREEN}What type of configuration would you like to build?\n1. Custom Nextflow workflow\n2. nfcore pipeline\n\nPlease enter custom or nfcore: \n" + Style.RESET_ALL)
+if config_type == "custom":
+    nxfconfigBuilder()
+elif config_type == "nfcore":
+    nfconfigBuilder()
 else:
     print(f"{Fore.RED}Invalid selection. Please run the script again and enter either custom or nf-core.\n" + Style.RESET_ALL)

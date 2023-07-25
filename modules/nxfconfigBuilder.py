@@ -38,13 +38,14 @@ def nxfconfigBuilder():
         module = module if module else 'nextflow'
         clusterOptions = input(Fore.MAGENTA + "What cluster options should be applied to each process execution? \nFor more information, see https://www.nextflow.io/docs/latest/process.html#clusteroptions \n" + Style.RESET_ALL)
 
-    # Define cpu, memory, walltime limits regardless of if local or executor
+    # Define compute resource limits regardless of if local or executor
     cpus = ask_for_input(Fore.MAGENTA + "What is the max number of CPUs available on this queue (default is 1)? \nFor more information, see https://www.nextflow.io/docs/latest/process.html#cpus \n", type_=int, min_=1)
     cpus = cpus if cpus else 1
     memory = ask_for_input(Fore.MAGENTA + "What is the max amount of memory in GB available on this queue (default is 1)? \nFor more information, see https://www.nextflow.io/docs/latest/process.html#memory \n", type_=int, min_=1)
     memory = memory if memory else 1
     walltime = ask_for_input(Fore.MAGENTA + "What is the max walltime available on this queue (default is 0.5h)? \nFor more information, see https://www.nextflow.io/docs/latest/process.html#time \n", type_=float, min_=0.5) if executor in ['pbspro', 'slurm', 'azure batch', 'aws batch', 'bridge', 'flux', 'lsf', 'moab', 'oar', 'nqsii', 'pbs', 'sge'] else None
     walltime = walltime if walltime else 0.5
+    disk = ask_for_input(Fore.MAGENTA + "What is the max local disk space available? \nFor more information, see https://www.nextflow.io/docs/latest/process.html#disk \n", type_=string, min_=1)
 
     # Use withName selector to specify process-specific resources
     process_specific_configs = []
