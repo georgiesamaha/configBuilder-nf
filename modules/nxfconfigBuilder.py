@@ -1,112 +1,94 @@
 from colorama import Fore, Style, init
+import inquirer
 
 # Initialise colorama
 init(autoreset=True)
 
-# Erroneous input handler 
 def nxfconfigBuilder():
-    def ask_for_input(prompt, type_=None, min_=None, max_=None, num_of_attempts=3):
-        for _ in range(num_of_attempts):
-            val = input(Fore.GREEN + prompt + Style.RESET_ALL)
-            if type_ is not None:
-                try:
-                    val = type_(val)
-                except ValueError:
-                    print(Fore.RED + f"Input type must be {type_.__name__}!" + Style.RESET_ALL)
-                    continue
-            if min_ is not None and val < min_:
-                print(Fore.RED + f"Input must be greater than or equal to {min_}!" + Style.RESET_ALL)
-            elif max_ is not None and val > max_:
-                print(Fore.RED + f"Input must be less than or equal to {max_}!" + Style.RESET_ALL)
-            else:
-                return val
-        raise ValueError('Invalid Input')
-
     # Set default values for required inputs 
     queue = None
     module = 'nextflow'
     clusterOptions = ''
 
     # Define executor, can only be one supported by Nextflow
-    executor = input(Fore.MAGENTA + "What executor does your system use (default is 'local')? \nFor more information, see https://www.nextflow.io/docs/latest/executor.html \n" + Style.RESET_ALL)
-    executor = executor if executor else 'local'
+    executor_list = ['local', 'aws batch', 'azure batch', 'bridge', 'flux', 'lsf', 'moab', 'nqsii', 'oar', 'pbs', 'pbspro', 'sge', 'slurm']
 
-    # If executor define queue, modules to pre-load and clusterOptions to apply to each process
-    if executor in ['pbspro', 'slurm', 'azure batch', 'aws batch', 'bridge', 'flux', 'lsf', 'moab', 'oar', 'nqsii', 'pbs', 'sge']:
-        queue = input(Fore.MAGENTA + "What queue would you like to run your jobs on? \nFor more information, see https://www.nextflow.io/docs/latest/process.html#queue \n" + Style.RESET_ALL)
-        module = input(Fore.MAGENTA + "What modules and versions should be loaded before executing each process (default is 'nextflow')? \nFor more information, see https://www.nextflow.io/docs/latest/process.html#beforescript \n" + Style.RESET_ALL)
-        module = module if module else 'nextflow'
-        clusterOptions = input(Fore.MAGENTA + "What cluster options should be applied to each process execution? \nFor more information, see https://www.nextflow.io/docs/latest/process.html#clusteroptions \n" + Style.RESET_ALL)
+    questions = [
+    inquirer.List('executor',
+                message="Select the job scheduler that your HPC system uses (Specify local to run jobs on login node)",
+                choices=executor_list,
+            ),
+    ]
+
+    answers = inquirer.prompt(questions)
+    executor = answers['executor']
+
+    print(f"You selected: {executor}")
+
+    # Define queue, modules and clusterOptions
+    questions = [
+    inquirer.Text('module', message="Enter modules and versions should be loaded before executing each process? (separate multiple modules by a space)", default='nextflow'),
+    ]
+    if executor != 'local':
+        questions.extend([
+            inquirer.Text('queue', message="Specify the queue you would like to run your jobs on"),
+            inquirer.Text('clusterOptions', message="Specify cluster options that should be applied to each process")
+        ])
+    answers = inquirer.prompt(questions)
+    module = answers.get('module', 'nextflow')
+    queue = answers.get('queue')
+    clusterOptions = answers.get('clusterOptions')
 
     # Define compute resource limits regardless of if local or executor
-    cpus = ask_for_input(Fore.MAGENTA + "What is the max number of CPUs available on this queue (default is 1)? \nFor more information, see https://www.nextflow.io/docs/latest/process.html#cpus \n", type_=int, min_=1)
-    cpus = cpus if cpus else 1
-    memory = ask_for_input(Fore.MAGENTA + "What is the max amount of memory in GB available on this queue (default is 1)? \nFor more information, see https://www.nextflow.io/docs/latest/process.html#memory \n", type_=int, min_=1)
-    memory = memory if memory else 1
-    walltime = ask_for_input(Fore.MAGENTA + "What is the max walltime available on this queue (default is 0.5h)? \nFor more information, see https://www.nextflow.io/docs/latest/process.html#time \n", type_=float, min_=0.5) if executor in ['pbspro', 'slurm', 'azure batch', 'aws batch', 'bridge', 'flux', 'lsf', 'moab', 'oar', 'nqsii', 'pbs', 'sge'] else None
-    walltime = walltime if walltime else 0.5
-    disk = ask_for_input(Fore.MAGENTA + "What is the max local disk space available? \nFor more information, see https://www.nextflow.io/docs/latest/process.html#disk \n", type_=string, min_=1)
+    cpus = inquirer.prompt([inquirer.Text('cpus', message="Specify the max number of CPUs to be allocated to each process", default="1", validate=lambda _, x: x.isdigit())])['cpus']
+    memory = inquirer.prompt([inquirer.Text('memory', message="Specify the max amount of memory in GB to be allocated to each process", default="1", validate=lambda _, x: x.isdigit())])['memory']
+    walltime = inquirer.prompt([inquirer.Text('walltime', message="Specify the max walltime in hours for each process", default="0.5", validate=lambda _, x: x.replace('.','',1).isdigit())])['walltime'] if executor in executor_list else None
 
     # Use withName selector to specify process-specific resources
     process_specific_configs = []
     while True:
-        add_process_specific_config = input(Fore.CYAN + "Do you want to specify unique resource needs for a particular process? (yes/no) " + Style.RESET_ALL)
+        add_process_specific_config = inquirer.prompt([inquirer.List('add_process_specific_config', message="Do you want to specify unique resource needs for a particular process?", choices=['yes', 'no'])])['add_process_specific_config']
         if add_process_specific_config.lower() == 'yes':
-            process_name = input(Fore.YELLOW + "Please enter the process name: " + Style.RESET_ALL)
-            process_executor = input(Fore.MAGENTA + f"What executor should this process use (default is '{executor}')? " + Style.RESET_ALL)
-            process_executor = process_executor if process_executor else executor
-            process_cpus = ask_for_input(Fore.MAGENTA + "What is the max number of CPUs for this process (default is 1)? ", type_=int, min_=1)
-            process_memory = ask_for_input(Fore.MAGENTA + "What is the max amount of memory in GB for this process (default is 1)? ", type_=int, min_=1)
-            process_walltime = ask_for_input(Fore.MAGENTA + "What is the max walltime for this process (default is 0.5h)? ", type_=float, min_=0.5) if process_executor == executor else None
-            process_walltime = process_walltime if process_walltime else 0.5
-            process_queue = input(Fore.MAGENTA + "What queue should this process run on? " + Style.RESET_ALL) if process_executor == executor else None
-            
-            process_specific_configs.append({
-                'name': process_name,
-                'executor': process_executor,
-                'cpus': process_cpus,
-                'memory': process_memory,
-                'walltime': process_walltime,
-                'queue': process_queue
-            })
+            questions = [
+                inquirer.Text('process_name', message="Please enter the process name"),
+                inquirer.List('process_executor', message="Specify the executor this process should use", choices=executor_list, default=executor),
+                inquirer.Text('process_cpus', message="Specify the max number of CPUs to be allocated to each process", default="1", validate=lambda _, x: x.isdigit()),
+                inquirer.Text('process_memory', message="Specify the max amount of memory in GB to be allocated to each process", default="1", validate=lambda _, x: x.isdigit()),
+                inquirer.Text('process_walltime', message="Specify the max walltime in hours for each process", default="0.5", validate=lambda _, x: x.replace('.','',1).isdigit()) if executor in executor_list else None
+            ]
+            answers = inquirer.prompt(questions)
+        
+            if answers['process_executor'] != 'local':
+                queue_answer = inquirer.prompt([inquirer.Text('process_queue', message="Specify the queue this process should use")])
+                answers['process_queue'] = queue_answer['process_queue']
+
+            process_specific_configs.append(answers)
         elif add_process_specific_config.lower() == 'no':
             break
-        else:
-            print(Fore.RED + "Invalid input! Please enter 'yes' or 'no'." + Style.RESET_ALL)
-    
-    # Enable singularity 
-    while True:
-        enable_singularity_input = input(Fore.CYAN + "Do you want to enable singularity? (yes/no) " + Style.RESET_ALL).lower()
-        if enable_singularity_input == 'yes':
-            enable_singularity = True
-            singularity_cache = input(Fore.CYAN + "Enter the path to your Singularity cache directory: " + Style.RESET_ALL)
-            break
-        elif enable_singularity_input == 'no':
-            enable_singularity = False
-            break
-        else:
-            print(Fore.RED + "Invalid input! Please enter 'yes' or 'no'." + Style.RESET_ALL)
 
+    # Enable singularity 
+    enable_singularity_input = inquirer.prompt([inquirer.List('enable_singularity', message="Do you want to enable singularity?", choices=['yes', 'no'])])['enable_singularity']
+    if enable_singularity_input == 'yes':
+        singularity_cache = inquirer.prompt([inquirer.Text('singularity_cache', message="Enter the path to your Singularity cache directory")])['singularity_cache']
+    else:
+        singularity_cache = None
+
+    output_file = inquirer.prompt([inquirer.Text('output_file', message="Enter the custom config name", default='custom_nextflow.config')])['output_file']
 
     # Write outputs to custom configuration file
-    output_file = input(Fore.YELLOW + "Enter the output file name (default is 'custom_nextflow.config'): " + Style.RESET_ALL)
-    output_file = output_file if output_file else 'custom_nextflow.config'
-
     with open(output_file, 'w') as f:
         f.write("// Custom Nextflow config file \n\n")
-        if enable_singularity:
+        if enable_singularity_input == 'yes':
             f.write("singularity {\n")
             f.write("    enabled = true\n")
-            f.write("    cache = lenient\n")
-            f.write("    singularity.autoMounts = true\n")
-            f.write("    NXF_SINGULARITY_CACHEDIR = {singularity_cache} \n")
+            f.write(f"    NXF_SINGULARITY_CACHEDIR = {singularity_cache} \n")
             f.write("}\n\n")
         f.write("process {\n")
+        if module:
+            f.write(f"    beforeScript = 'module load {module}'\n")
         f.write(f"    executor = '{executor}'\n")
         if queue:
             f.write(f"    queue = '{queue}'\n")
-        if module:
-            f.write(f"    beforeScript = 'module load {module}'\n")
         if clusterOptions:
             f.write(f"    clusterOptions = '{clusterOptions}'\n")
         f.write(f"    cpus = {cpus}\n")
@@ -114,15 +96,14 @@ def nxfconfigBuilder():
         if walltime is not None:
             f.write(f"    time = '{walltime}h'\n")
         for config in process_specific_configs:
-            f.write(f"    withName: {config['name']} {{\n")
-            f.write(f"        executor = '{config['executor']}'\n")
-            if config['queue']:
-                f.write(f"        queue = '{config['queue']}'\n")
-            f.write(f"        cpus = {config['cpus']}\n")
-            f.write(f"        memory = '{config['memory']}GB'\n")
-            if config['walltime'] is not None:
-                f.write(f"        time = '{config['walltime']}h'\n")
-            f.write("    }\n")
-        f.write("}\n")
+            f.write(f"    withName: {config['process_name']} {{\n")
+            f.write(f"        executor = '{config['process_executor']}'\n")
+            if config.get('process_queue'):
+                f.write(f"        queue = '{config['process_queue']}'\n")
+            f.write(f"        cpus = {config['process_cpus']}\n")
+            f.write(f"        memory = '{config['process_memory']}GB'\n")
+            if config.get('process_walltime') is not None:
+                f.write(f"        time = '{config['process_walltime']}h'\n")
+            f.write(f"    }}\n")
 
-    print(Fore.GREEN + "Configuration file {output_file} successfully written." + Style.RESET_ALL)
+    print(f"{Fore.GREEN}Config file {output_file} has been successfully created!{Style.RESET_ALL}")

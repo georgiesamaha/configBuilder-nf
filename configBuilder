@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-from modules import nxfconfigBuilder, nfconfigBuilder, nxfEvaluate
+from modules import nxfconfigBuilder, nfconfigBuilder
 from colorama import Fore, Style, init
+import inquirer
 
 # Initialise colorama
 init(autoreset=True)
@@ -20,7 +21,15 @@ to specify your settings.
 """)
 
 # Prompt user for desired action 
-config_type = input(f"{Fore.GREEN}What type of configuration would you like to build?\n1. Custom Nextflow workflow\n2. nfcore pipeline\n\nPlease enter custom or nfcore: \n" + Style.RESET_ALL)
+config_type_question = [
+  inquirer.List('config_type',
+                message="What type of configuration would you like to build?",
+                choices=['custom', 'nfcore'],
+            ),
+]
+answers = inquirer.prompt(config_type_question)
+config_type = answers['config_type']
+
 if config_type == "custom":
     nxfconfigBuilder()
 elif config_type == "nfcore":
