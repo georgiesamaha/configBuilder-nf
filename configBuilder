@@ -24,7 +24,7 @@ to specify your settings.
 config_type_question = [
   inquirer.List('config_type',
                 message="What type of configuration would you like to build?",
-                choices=['custom', 'nfcore'],
+                choices=['custom', 'nf-core'],
             ),
 ]
 answers = inquirer.prompt(config_type_question)
@@ -32,7 +32,7 @@ config_type = answers['config_type']
 
 if config_type == "custom":
     nxfconfigBuilder()
-elif config_type == "nfcore":
+elif config_type == "nf-core":
     nfconfigBuilder()
 else:
     print(f"{Fore.RED}Invalid selection. Please run the script again and enter either custom or nf-core.\n" + Style.RESET_ALL)
