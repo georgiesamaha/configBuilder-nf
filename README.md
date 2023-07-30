@@ -11,27 +11,25 @@ Execute with:
 python3 configBuilder
 ```
 
+You can run the following to ensure required Python packages are installed: 
+```default
+pip install requirements.txt 
+```
+
 ## Nextflow config builder 
 
 * Simple HPC config builder that submits tasks as jobs to scheduler or local tasks
 * Preloads modules with `beforeScript` operator 
 * Set max walltime, cpu, memory for queue
 * Set process-specific scope as needed 
-* Enable Singularity 
-* TODO: Tower functionality option 
-* TODO: Ask if want to trace resource usage for efficiency evaluation
-* TODO: Set number of retries with increasing resources 
+* Enables Singularity 
+* Outputs custom_nextflow.config
 
 ## nf-core config builder 
 
 * Simple HPC config builder that submits tasks as jobs to scheduler or local tasks
 * Preloads modules with `beforeScript` operator 
 * Set max_time, max_cpu, max_memory for workflow
-* Set process-specific scope as needed 
-* TODO: assign queue based on flexible resource requrements
-* TODO: explore if pipeline-specific features are required
-* TODO: explore withLabel resource requirements 
-
-## Workflow resource usage evaluation 
-
-* TODO: scope functionality 
+* Set process-specific scope and resources as needed 
+* Set label-specific scope and queue as needed 
+* Outputs custom_nfcore.config
