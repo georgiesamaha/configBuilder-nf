@@ -43,6 +43,8 @@ def nxfconfigBuilder():
     cpus = inquirer.prompt([inquirer.Text('cpus', message="Specify the max number of CPUs to be allocated to each process", default="1", validate=lambda _, x: x.isdigit())])['cpus']
     memory = inquirer.prompt([inquirer.Text('memory', message="Specify the max amount of memory in GB to be allocated to each process", default="1", validate=lambda _, x: x.isdigit())])['memory']
     walltime = inquirer.prompt([inquirer.Text('walltime', message="Specify the max walltime in hours for each process", default="0.5", validate=lambda _, x: x.replace('.','',1).isdigit())])['walltime'] if executor in executor_list else None
+    
+    # Rest of your code remains same...
 
     # Use withName selector to specify process-specific resources
     process_specific_configs = []
@@ -87,7 +89,7 @@ def nxfconfigBuilder():
             f.write(f"    NXF_SINGULARITY_CACHEDIR = {singularity_cache} \n")
             f.write("}\n\n")
         if cleanup_input == 'yes':
-            f.write("cleanup = true\n")
+            f.write("cleanup = true\n\n")
         f.write("process {\n")
         if module:
             f.write(f"    beforeScript = 'module load {module}'\n")
@@ -101,7 +103,7 @@ def nxfconfigBuilder():
         if walltime is not None:
             f.write(f"    time = '{walltime}h'\n")
         for config in process_specific_configs:
-            f.write(f"    withName: {config['process_name']} {{\n")
+            f.write(f"\n    withName: {config['process_name']} {{\n")
             f.write(f"        executor = '{config['process_executor']}'\n")
             if config.get('process_queue'):
                 f.write(f"        queue = '{config['process_queue']}'\n")
@@ -110,5 +112,6 @@ def nxfconfigBuilder():
             if config.get('process_walltime') is not None:
                 f.write(f"        time = '{config['process_walltime']}h'\n")
             f.write(f"    }}\n")
+        f.write(f"}}\n")
 
     print(f"{Fore.GREEN}Config file {output_file} has been successfully created!{Style.RESET_ALL}")
