@@ -73,9 +73,12 @@ def nxfconfigBuilder():
     else:
         singularity_cache = None
 
-    output_file = inquirer.prompt([inquirer.Text('output_file', message="Enter the custom config name", default='custom_nextflow.config')])['output_file']
+    # Enable post run clean up 
+    cleanup_input = inquirer.prompt([inquirer.List('cleanup', message="Do you want to enable cleanup?", choices=['yes', 'no'])])['cleanup']
 
     # Write outputs to custom configuration file
+    output_file = inquirer.prompt([inquirer.Text('output_file', message="Enter the custom config name", default='custom_nextflow.config')])['output_file']
+    
     with open(output_file, 'w') as f:
         f.write("// Custom Nextflow config file \n\n")
         if enable_singularity_input == 'yes':
@@ -83,6 +86,8 @@ def nxfconfigBuilder():
             f.write("    enabled = true\n")
             f.write(f"    NXF_SINGULARITY_CACHEDIR = {singularity_cache} \n")
             f.write("}\n\n")
+        if cleanup_input == 'yes':
+            f.write("cleanup = true\n")
         f.write("process {\n")
         if module:
             f.write(f"    beforeScript = 'module load {module}'\n")

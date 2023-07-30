@@ -15,7 +15,7 @@ print(f"{Fore.CYAN} \____\___/|_| |_|_| |_|\__, |____/ \__,_|_|_|\__,_|\___|_|  
 print(f"{Fore.CYAN}                        |___/                                 ")
 
 print(f"""
-{Fore.WHITE}This script helps you to build a Nextflow config file for your HPC 
+{Fore.MAGENTA}This tool helps you to build a custom Nextflow config file for your HPC 
 based on your specified job scheduler and resources. Follow the prompts 
 to specify your settings.
 """)
