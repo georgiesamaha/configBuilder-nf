@@ -13,7 +13,7 @@ python3 configBuilder
 
 You can run the following to ensure required Python packages are installed: 
 ```default
-pip install requirements.txt 
+pip install -r requirements.txt 
 ```
 
 ## Nextflow config builder 
