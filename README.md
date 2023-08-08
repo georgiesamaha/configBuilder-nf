@@ -35,16 +35,16 @@ Follow the prompts carefully, ensuring you provide accurate details as per your 
 
 You will be asked a series of questions regarding: 
 
-* **Pipeline source:** You'll first be asked if you're generating this configuration file for an nf-core or a custom Nextflow pipeline 
-* **Pipeline selection:** If you select nf-core you'll be asked to name the nf-core pipeline you intend to apply the generated config file to 
-* **Executor selection:** You'll be prompted to select the [job scheduler](https://www.nextflow.io/docs/latest/executor.html#executors) (executor) that your HPC system uses. Choose one from the list, or specify local
-* **Module preloading:** Specify any modules and their versions that should be loaded before each process. Multiple modules can be separated by spaces. This employs the beforeScript operator to preload necessary modules for your HPC environment
+* **Pipeline source:** You'll first be asked if you're generating this configuration file for an nf-core or a custom Nextflow pipeline. 
+* **Pipeline selection:** If you select nf-core you'll be asked to name the nf-core pipeline you intend to apply the generated config file to. 
+* **Executor selection:** You'll be prompted to select the [job scheduler](https://www.nextflow.io/docs/latest/executor.html#executors) (executor) that your HPC system uses. Choose one from the list, or specify local.
+* **Module preloading:** Specify any modules and their versions that should be loaded before each process. Multiple modules can be separated by spaces. This employs the beforeScript operator to preload necessary modules for your HPC environment.
 * **Compute resources:** If you've not selected local as the executor, you'll be prompted to:
-    * Specify the **queue** in which to run your jobs
-    * Provide any additional **cluster options**
-    * Define the maximum number of **CPUs, memory in GB, and walltime in hours** for each process
-* **Label-specific resources:** The application allows you to specify unique resource needs for [specific labels](https://www.nextflow.io/docs/latest/config.html?highlight=withname#process-selectors). This can be especially useful when certain stages or steps in your pipeline have different computational requirements
-* **Process-specific resources:** You can define resources for specific processes based on their [name](https://www.nextflow.io/docs/latest/config.html?highlight=withname#process-selectors), further tailoring your configuration to match the requirements of individual steps in your pipeline
+    * Specify the **queue** in which to run your jobs.
+    * Provide any additional **cluster options**. 
+    * Define the maximum number of **CPUs, memory in GB, and walltime in hours** for each process.
+* **Label-specific resources:** The application allows you to specify unique resource needs for [specific labels](https://www.nextflow.io/docs/latest/config.html?highlight=withname#process-selectors). This can be especially useful when certain stages or steps in your pipeline have different computational requirements.
+* **Process-specific resources:** You can define resources for specific processes based on their [name](https://www.nextflow.io/docs/latest/config.html?highlight=withname#process-selectors), further tailoring your configuration to match the requirements of individual steps in your pipeline.
 * **Post-run clean up:** You have the option to enable [cleanup](https://www.nextflow.io/docs/latest/config.html?highlight=cleanup#miscellaneous) after your runs, ensuring that temporary files and data are removed to free up space.
 
 Once all prompts have been answered, the application will generate the custom config. 
