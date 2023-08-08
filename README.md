@@ -60,7 +60,7 @@ nextflow run nf-core/rnaseq/main.nf \
     --outdir <OUTDIR>
 ```
 
-## Considerations
+### Considerations
 
 Keep the following limitations in mind when using this application: 
 
