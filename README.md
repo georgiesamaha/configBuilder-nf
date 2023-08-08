@@ -6,19 +6,14 @@ Currently 2 modules under development:
 1. Nextflow pipeline config builder 
 2. nf-core pipeline config builder
 
-Download code base: 
-```default
-git clone https://github.com/georgiesamaha/configBuilder-nf.git
-```
-
-Install required Python packages: 
-```default
-pip install -r requirements.txt 
-```
-
 Execute with:
 ```default
 python3 configBuilder
+```
+
+You can run the following to ensure required Python packages are installed: 
+```default
+pip install -r requirements.txt 
 ```
 
 ## Nextflow config builder 
