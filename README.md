@@ -14,11 +14,21 @@ To run this application you will need to have Python3 installed and the followin
 git clone https://github.com/georgiesamaha/configBuilder-nf.git
 ```
 
-2. Install required packages: 
-```default
-pip install -r requirements.txt 
-```
+2. Change into the repository and install required packages
 
+   a. With pip
+
+   ```default
+   pip install -r requirements.txt 
+   ```
+
+   b. With conda
+
+   ```default
+   conda env -f environment.yml
+   conda activate configbuilder-nf
+   ```
+   
 ## Usage 
 
 Execute `configBuilder-nf` by running the following from inside the configBuilder-nf directory: 
