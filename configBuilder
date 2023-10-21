@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from modules import nxfconfigBuilder, nfconfigBuilder
+from modules import custom_pipeline, nfconfigBuilder
 from colorama import Fore, Style, init
 import inquirer
 
@@ -23,16 +23,16 @@ to specify your settings.
 # Prompt user for desired action 
 config_type_question = [
   inquirer.List('config_type',
-                message="What type of configuration would you like to build?",
-                choices=['custom', 'nf-core'],
+                message="What type of configuration file would you like to build?",
+                choices=['custom', 'nf-core institutional'],
             ),
 ]
 answers = inquirer.prompt(config_type_question)
 config_type = answers['config_type']
 
 if config_type == "custom":
-    nxfconfigBuilder()
-elif config_type == "nf-core":
-    nfconfigBuilder()
+    custom_pipeline()
+elif config_type == "nf-core institutional":
+    create_nfcore()
 else:
     print(f"{Fore.RED}Invalid selection. Please run the script again and enter either custom or nf-core.\n" + Style.RESET_ALL)
