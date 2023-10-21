@@ -1,29 +1,3 @@
-from colorama import Fore, Style, init
-import inquirer
-
-# Initialise colorama
-init(autoreset=True)
-
-def nxfconfigBuilder():
-    # Set default values for required inputs 
-    queue = None
-    module = 'nextflow'
-    clusterOptions = ''
-
-    # Define executor, can only be one supported by Nextflow
-    executor_list = ['local', 'aws batch', 'azure batch', 'bridge', 'flux', 'lsf', 'moab', 'nqsii', 'oar', 'pbs', 'pbspro', 'sge', 'slurm']
-
-    questions = [
-    inquirer.List('executor',
-                message="Select the job scheduler that your HPC system uses (Specify local to run jobs on login node)",
-                choices=executor_list,
-            ),
-    ]
-
-    answers = inquirer.prompt(questions)
-    executor = answers['executor']
-
-    print(f"You selected: {executor}")
 
     # Define queue, modules and clusterOptions
     questions = [

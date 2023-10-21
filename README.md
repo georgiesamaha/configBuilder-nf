@@ -1,4 +1,8 @@
-# configBuilder-nf: Nextflow configs for HPC
+# configBuilder-nf: create custom Nextflow configs
+
+<p align="center">
+:wrench: This tool is currently under development :wrench:
+</p>
 
 configBuilder-nf is a Python-based application for building custom configuration files for running your Nextflow and nf-core pipelines for High Performance Computing (HPC) infrastructures. This tool uses command-line prompts to collect specific details from you regarding the HPC job scheduler your system works with, compute resources available to you, and more. The collected inputs are then formatted and written to a configuration file, making it easier for uses to deploy pipelines on HPC infrastructures.
 
@@ -41,21 +45,14 @@ It is essential that you understand the infrastructure you are working on before
 
 ### Prompts 
 
-Follow the prompts carefully, ensuring you provide accurate details as per your HPC environment and pipeline requirements. The tool simplifies the configuration process, making it more intuitive and user-friendly for those deploying Nextflow or nf-core pipelines on HPC systems, however it cannot validate your inputs are correct.
+Follow the prompts carefully, ensuring you provide accurate details as per your HPC environment and pipeline requirements. The tool simplifies the configuration process, making it more intuitive and user-friendly for those deploying Nextflow or nf-core pipelines on HPC systems, however it cannot validate your inputs are correct. 
 
-You will be asked a series of questions regarding: 
+Prompts are currently WIP, it currently tests for: 
 
 * **Pipeline source:** You'll first be asked if you're generating this configuration file for an nf-core or a custom Nextflow pipeline. 
-* **Pipeline selection:** If you select nf-core you'll be asked to name the nf-core pipeline you intend to apply the generated config file to. 
-* **Executor selection:** You'll be prompted to select the [job scheduler](https://www.nextflow.io/docs/latest/executor.html#executors) (executor) that your HPC system uses. Choose one from the list, or specify local.
-* **Module preloading:** Specify any modules and their versions that should be loaded before each process. Multiple modules can be separated by spaces. This employs the beforeScript operator to preload necessary modules for your HPC environment.
-* **Compute resources:** If you've not selected local as the executor, you'll be prompted to:
-    * Specify the **queue** in which to run your jobs.
-    * Provide any additional **cluster options**. 
-    * Define the maximum number of **CPUs, memory in GB, and walltime in hours** for each process.
-* **Label-specific resources:** The application allows you to specify unique resource needs for [specific labels](https://www.nextflow.io/docs/latest/config.html?highlight=withname#process-selectors). This can be especially useful when certain stages or steps in your pipeline have different computational requirements.
-* **Process-specific resources:** You can define resources for specific processes based on their [name](https://www.nextflow.io/docs/latest/config.html?highlight=withname#process-selectors), further tailoring your configuration to match the requirements of individual steps in your pipeline.
-* **Post-run clean up:** You have the option to enable [cleanup](https://www.nextflow.io/docs/latest/config.html?highlight=cleanup#miscellaneous) after your runs, ensuring that temporary files and data are removed to free up space.
+* **Your execution environment:** Are you running your workflow on HPC, cloud, or local machine (currently only HPC functional). 
+* **Availability of a Singularity module:** Can singularity be enabled on your system to run containers. 
+* **Your config name:** What do you want your custom config to be called (default: custom_nextflow.config)
 
 Once all prompts have been answered, the application will generate the custom config. 
 
@@ -74,12 +71,12 @@ nextflow run nf-core/rnaseq/main.nf \
 
 Keep the following limitations in mind when using this application: 
 
+* This tool is a WIP 
 * This tool was developed using features provided by Nextflow v23.04.1
 * It is only designed to work with Nextflow supported executors 
 * The tool assumes the use of a module system for software management (beforeScript operator). If the HPC environment doesn't use module loading or uses a different system, this feature might not be beneficial
 * This tool provides no error handling or validation of the generated config 
 * While the tool allows users to specify resources like CPU, memory, and walltime, it doesn't provide guidance or estimates on what is appropriate for the infrastructure
-* This tool is limited to Nextflow-supported job schedulers only. 
 
 ## Acknowledgements 
 
@@ -89,4 +86,5 @@ This application was developed as a part of the [nf-core mentorship program](htt
 
 * Georgie Samaha (@georgiesamaha)
 * Cristina Tuñí i Domínguez (@ctuni)
+* James A. Fellows Yates (@jfy133)
 * Cali Willet (@calliza)
