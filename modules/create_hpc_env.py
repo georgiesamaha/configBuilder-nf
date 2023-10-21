@@ -2,6 +2,7 @@
 from colorama import Fore, Style, init
 import inquirer
 import subprocess
+import os
 
 # Initialise colorama
 init(autoreset=True)
@@ -39,6 +40,28 @@ def check_scheduler():
           pass
 
 def check_modules():
-  """
-  Check if a module system is being run on HPC system. If so, what modules should be loaded? 
-  """
+    """
+    Check if a module system is being used on the HPC system. If so, load Singularity. Assumes HPC has Singularity. 
+    """
+    try:
+        # Use subprocess to run the command within a shell context
+        result = subprocess.run('module --version', stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        output = result.stdout.decode('utf-8').strip()
+
+        if "Modules Release" in output:
+            print(Fore.GREEN + "Modules system detected.")
+            
+            result = subprocess.run('module avail', stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+            modules_available = result.stdout.decode('utf-8').strip()
+
+            if "singularity" in modules_available:
+                print(Fore.GREEN + "Singularity module is available.")
+            else:
+                print(Fore.YELLOW + "Singularity module is NOT available.")
+            return True
+        else:
+            print(Fore.YELLOW + "No Modules system detected.")
+            return False
+    except Exception as e:
+        print(Fore.RED + "Error checking for Modules system: " + str(e))
+        return False
