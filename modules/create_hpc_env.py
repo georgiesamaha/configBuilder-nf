@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 from colorama import Fore, Style, init
 import inquirer
 import subprocess
@@ -15,6 +16,7 @@ def check_scheduler():
   # Define commands to detect schedulers 
   commands = {
     #'pbs' : 'qstat --version',
+    # TODO: work out way to differentiate pbs and pbs pro
     'pbspro' : 'qstat --version',
     'sge' : 'qstat -help',
     'slurm' : 'sinfo --version'
@@ -25,7 +27,7 @@ def check_scheduler():
       try:
           #print(f"Trying {scheduler} with command: {cmd}")
 
-          # Run the command and capture the output
+          # Run the commands and capture the output
           result = subprocess.run(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
           output = result.stdout.decode('utf-8').strip()
           #print(f"Output for {scheduler}: {output}")
@@ -44,7 +46,7 @@ def check_modules():
     Check if a module system is being used on the HPC system. If so, load Singularity. Assumes HPC has Singularity. 
     """
     try:
-        # Use subprocess to run the command within a shell context
+        # Run module --version to see if its installed
         result = subprocess.run('module --version', stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         output = result.stdout.decode('utf-8').strip()
 

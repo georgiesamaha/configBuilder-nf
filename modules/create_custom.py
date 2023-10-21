@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 from .create_hpc_env import check_scheduler, check_modules
 from .write_config import write_config
 from colorama import Fore, Style, init
@@ -18,7 +19,7 @@ def custom_pipeline():
     answers = inquirer.prompt(execution_env_question)
     executor_env = answers['executor_env']
 
-    scheduler_name = None  # This will store the name of the detected scheduler if 'hpc' is chosen
+    scheduler_name = None  # Save name of scheduler if hpc selected
 
     if executor_env == "hpc":
         scheduler_name = check_scheduler()
@@ -31,13 +32,14 @@ def custom_pipeline():
     # Printing the selected environment
     print(f"You selected: {executor_env}")
 
-    # If 'hpc' was chosen, also print the detected scheduler
+    # If hpc, state scheduler found 
     if scheduler_name:
         print(f"The detected job scheduler is: {scheduler_name}")
 
-    # Inform the user that it's checking for the Singularity module
+    # Check for singularity 
     if module_results:
         print(f"Enabling Singularity to execute containers")
+
     # TODO add message for if local was chosen 
     # TODO add message for if cloud was chosen
 
