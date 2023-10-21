@@ -56,12 +56,16 @@ def check_modules():
 
             if "singularity" in modules_available:
                 print(Fore.GREEN + "Singularity module is available.")
+                return {"singularity": True}
+                
             else:
-                print(Fore.YELLOW + "Singularity module is NOT available.")
+                print(Fore.YELLOW + "Singularity module is not available.")
             return True
+            return {"singularity": False}
+
         else:
-            print(Fore.YELLOW + "No Modules system detected.")
+            print(Fore.YELLOW + "No modules system detected.")
             return False
     except Exception as e:
-        print(Fore.RED + "Error checking for Modules system: " + str(e))
+        print(Fore.RED + "Error checking for modules system: " + str(e))
         return False
