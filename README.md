@@ -4,6 +4,8 @@
 :wrench: This tool is currently under development :wrench:
 </p>
 
+**Developers please see [development guide](DEVELOPMENT.md) for resources and how to contribute**
+
 configBuilder-nf is a Python-based application for building custom configuration files for running your Nextflow and nf-core pipelines for High Performance Computing (HPC) infrastructures. This tool uses command-line prompts to collect specific details from you regarding the HPC job scheduler your system works with, compute resources available to you, and more. The collected inputs are then formatted and written to a configuration file, making it easier for uses to deploy pipelines on HPC infrastructures.
 
 ## Installation 
