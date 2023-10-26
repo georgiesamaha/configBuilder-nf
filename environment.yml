@@ -4,5 +4,5 @@ channels:
   - defaults
 dependencies:
   - conda-forge::python>=3
-  - conda-forge::colorama=0.4.4
-  - conda-forge::inquirer=2.7.0
+  - conda-forge::colorama==0.4.4
+  - conda-forge::inquirer==3.1.3
