@@ -67,7 +67,8 @@ def check_modules():
 
         else:
             print(Fore.YELLOW + "No modules system detected.")
-            return False
+            return {"not_detected": True}
+            
     except Exception as e:
         print(Fore.RED + "Error checking for modules system: " + str(e))
         return False
