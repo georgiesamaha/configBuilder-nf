@@ -25,7 +25,6 @@ def write_config(executor, module_results=None):
 
     with open(output_file, "w") as f:
         f.write("// Custom Nextflow config file \n\n")
-        print(module_results)
         if module_results.get("singularity"):
             f.write("singularity {\n")
             f.write("    enabled = true\n")
