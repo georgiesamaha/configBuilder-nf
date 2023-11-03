@@ -87,8 +87,9 @@ def check_modules():
             return {"singularity": False}
 
         else:
-            print(Fore.YELLOW + "...no modules system detected.")
-            return False
+            print(Fore.YELLOW + "No modules system detected.")
+            return {"not_detected": True}
+
     except Exception as e:
         print(Fore.RED + "Error checking for modules system: " + str(e))
         return False

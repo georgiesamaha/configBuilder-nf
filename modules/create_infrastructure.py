@@ -20,7 +20,8 @@ def create_infrastructure():
     answers = inquirer.prompt(execution_env_question)
     executor_env = answers["executor_env"]
 
-    scheduler_name = None  # Save name of scheduler if hpc selected
+    scheduler_name = None # Save name of scheduler if hpc selected
+    module_results = None # Save name of module if found 
 
     # Printing the selected environment
     print(f"You selected: {executor_env}")
