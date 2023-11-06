@@ -8,19 +8,23 @@ import inquirer
 # Initialise colorama
 init(autoreset=True)
 
-def custom_pipeline():
 
+def create_infrastructure():
     execution_env_question = [
-    inquirer.List('executor_env', 
-                message="What type of execution environment are you working in?",
-                choices= ['hpc', 'local', 'cloud'],
-                ),
+        inquirer.List(
+            "executor_env",
+            message="What type of execution environment are you working in?",
+            choices=["hpc", "local", "cloud"],
+        ),
     ]
     answers = inquirer.prompt(execution_env_question)
-    executor_env = answers['executor_env']
+    executor_env = answers["executor_env"]
 
     scheduler_name = None # Save name of scheduler if hpc selected
     module_results = None # Save name of module if found 
+
+    # Printing the selected environment
+    print(f"You selected: {executor_env}")
 
     if executor_env == "hpc":
         scheduler_name = check_scheduler()
@@ -30,20 +34,17 @@ def custom_pipeline():
     elif executor_env == "cloud":
         create_cloud_env()
 
-    # Printing the selected environment
-    print(f"You selected: {executor_env}")
-
-    # If hpc, state scheduler found 
-    if scheduler_name:
+    # If hpc, state scheduler found
+    if scheduler_name != "none":
         print(f"The detected job scheduler is: {scheduler_name}")
 
-    # Check for singularity 
+    # Check for singularity
     if module_results:
         print(f"Enabling Singularity to execute containers")
 
-    # TODO add message for if local was chosen 
+    # TODO add message for if local was chosen
     # TODO add message for if cloud was chosen
 
-    # Write preferences to custom config 
-    # TODO pass all relevant variables to this function 
+    # Write preferences to custom config
+    # TODO pass all relevant variables to this function
     write_config(executor=scheduler_name, module_results=module_results)
