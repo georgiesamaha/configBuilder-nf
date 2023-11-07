@@ -14,14 +14,14 @@ def create_infrastructure():
         inquirer.List(
             "executor_env",
             message="What type of execution environment are you working in?",
-            choices=["hpc", "local", "cloud"],
+            choices=["hpc", "local"],
         ),
     ]
     answers = inquirer.prompt(execution_env_question)
     executor_env = answers["executor_env"]
 
-    scheduler_name = None # Save name of scheduler if hpc selected
-    module_results = None # Save name of module if found 
+    scheduler_name = None  # Save name of scheduler if hpc selected
+    module_results = None  # Save name of module if found
 
     # Printing the selected environment
     print(f"You selected: {executor_env}")
