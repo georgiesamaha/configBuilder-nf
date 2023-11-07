@@ -4,6 +4,7 @@ from .create_hpc_env import check_scheduler, check_modules
 from .write_config import write_config
 from colorama import Fore, Style, init
 import inquirer
+from .create_container import create_container_scope
 
 # Initialise colorama
 init(autoreset=True)
@@ -20,27 +21,29 @@ def create_infrastructure():
     answers = inquirer.prompt(execution_env_question)
     executor_env = answers["executor_env"]
 
-    scheduler_name = None # Save name of scheduler if hpc selected
-    module_results = None # Save name of module if found 
+    scheduler_name = None  # Save name of scheduler if hpc selected
+    module_results = None  # Save name of module if found
 
     # Printing the selected environment
     print(f"You selected: {executor_env}")
 
+    # Infra-type specific options (in future could add cloud e.g. for AWS specific scopes)
     if executor_env == "hpc":
         scheduler_name = check_scheduler()
         module_results = check_modules()
-    elif executor_env == "local":
-        create_local_env()
-    elif executor_env == "cloud":
-        create_cloud_env()
+        if scheduler_name != "none":
+            print(f"The detected job scheduler is: {scheduler_name}")
+    else:
+        pass
 
-    # If hpc, state scheduler found
-    if scheduler_name != "none":
-        print(f"The detected job scheduler is: {scheduler_name}")
+    print(Fore.YELLOW + "Checking for available software environment software...")
+    container_results = create_container_scope()
+
+    # print(container_results)
 
     # Check for singularity
-    if module_results:
-        print(f"Enabling Singularity to execute containers")
+    # if module_results:
+    #     print(f"Enabling Singularity to execute containers")
 
     # TODO add message for if local was chosen
     # TODO add message for if cloud was chosen
