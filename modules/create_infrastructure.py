@@ -39,15 +39,10 @@ def create_infrastructure():
     print(Fore.YELLOW + "Checking for available software environment software...")
     container_results = create_container_scope()
 
-    # print(container_results)
-
-    # Check for singularity
-    # if module_results:
-    #     print(f"Enabling Singularity to execute containers")
-
-    # TODO add message for if local was chosen
-    # TODO add message for if cloud was chosen
-
     # Write preferences to custom config
     # TODO pass all relevant variables to this function
-    write_config(executor=scheduler_name, module_results=module_results)
+    write_config(
+        executor=scheduler_name,
+        module_results=module_results,
+        container=container_results,
+    )

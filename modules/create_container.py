@@ -6,15 +6,17 @@ import inquirer
 from colorama import Fore, Style, init
 from .utilities import create_tool_options
 
+## TODO: consider how to address `module` environment detection here
+
 nxf_software_management = (
     "conda",
     "docker",
     "singularity",
+    "apptainer",
     "charliecloud",
     "podman",
     "sarus",
     "shifter",
-    "apptainer",
 )
 
 
@@ -24,16 +26,45 @@ def detect_containers(options=nxf_software_management):
     return container_options
 
 
-## TODO: account for nothing found
 container_options = detect_containers()
 
 
 def create_container_scope(options=container_options):
-    question = [
-        inquirer.List(
-            "container_options",
-            message="Which software environment system would you like to use?",
-            choices=options,
+    if not container_options:
+        print(Fore.YELLOW + "...no software environment systems detected.")
+        question = [
+            inquirer.Confirm(
+                "container_manual_selection",
+                message="Would you like to manually select a software environment?",
+            )
+        ]
+        manual_question = inquirer.prompt(question)
+
+        if manual_question["container_manual_selection"]:
+            question = [
+                inquirer.List(
+                    "container_options",
+                    message="Which software environment system would you like to use?",
+                    choices=nxf_software_management,
+                )
+            ]
+            answer = inquirer.prompt(question)
+        else:
+            answer = False
+    else:
+        print(
+            Fore.YELLOW
+            + "..."
+            + str(len(container_options))
+            + " software environment systems detected."
         )
-    ]
-    inquirer.prompt(question)
+        question = [
+            inquirer.List(
+                "container_options",
+                message="Which software environment system would you like to use?",
+                choices=options,
+            )
+        ]
+        answer = inquirer.prompt(question)
+
+    return answer
