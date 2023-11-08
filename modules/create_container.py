@@ -20,6 +20,7 @@ nxf_software_management = (
 )
 
 
+## TODO: extend to instead use module detection system if available
 def detect_containers(options=nxf_software_management):
     container_options = create_tool_options(options)
 
