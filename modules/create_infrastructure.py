@@ -50,7 +50,7 @@ def create_infrastructure():
         [
             inquirer.List(
                 "cleanup",
-                message="Do you want to enable cleanup?",
+                message="Do you want to enable cleanup of work directory on successful completion of a run?",
                 choices=["yes", "no"],
             )
         ]
