@@ -20,8 +20,8 @@ def create_infrastructure():
     answers = inquirer.prompt(execution_env_question)
     executor_env = answers["executor_env"]
 
-    scheduler_name = None # Save name of scheduler if hpc selected
-    module_results = None # Save name of module if found 
+    scheduler_name = None  # Save name of scheduler if hpc selected
+    module_results = None  # Save name of module if found
 
     # Printing the selected environment
     print(f"You selected: {executor_env}")
@@ -45,6 +45,17 @@ def create_infrastructure():
     # TODO add message for if local was chosen
     # TODO add message for if cloud was chosen
 
+    # Enable post run clean up
+    cleanup_input = inquirer.prompt(
+        [
+            inquirer.List(
+                "cleanup",
+                message="Do you want to enable cleanup?",
+                choices=["yes", "no"],
+            )
+        ]
+    )["cleanup"]
+
     # Write preferences to custom config
     # TODO pass all relevant variables to this function
-    write_config(executor=scheduler_name, module_results=module_results)
+    write_config(cleanup_input, executor=scheduler_name, module_results=module_results)

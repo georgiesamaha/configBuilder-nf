@@ -8,7 +8,7 @@ import os
 init(autoreset=True)
 
 
-def write_config(executor, module_results=None):
+def write_config(executor, module_results=None, cleanup_input=False):
     """
     Write the user's specifications to variables inside the config template below and output to a text file.
     """
@@ -34,3 +34,6 @@ def write_config(executor, module_results=None):
         f.write("process {\n")
         f.write(f"    executor = '{executor}'\n")
         f.write("}\n\n")
+
+        if cleanup_input:
+            f.write("cleanup = true\n")
