@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from modules import create_infrastructure, nfconfigBuilder
+from modules import create_infrastructure, create_pipeline
 from colorama import Fore, Style, init
 import inquirer
 
@@ -39,7 +39,7 @@ config_type = answers["config_type"]
 if config_type == "infrastructure":
     create_infrastructure()
 elif config_type == "pipeline":
-    create_nfcore()
+    create_pipeline()
 else:
     print(
         f"{Fore.RED}Invalid selection. Please run the script again and enter either custom or nf-core.\n"
