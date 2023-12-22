@@ -25,12 +25,17 @@ def write_config(executor, module_results=None):
 
     with open(output_file, "w") as f:
         f.write("// Custom Nextflow config file \n\n")
+
+        ## container options
         if module_results.get("singularity"):
             f.write("singularity {\n")
             f.write("    enabled = true\n")
             # f.write(f"    NXF_SINGULARITY_CACHEDIR = {singularity_cache} \n")
-        f.write("}\n\n")
+            f.write("}\n\n")
 
-        f.write("process {\n")
-        f.write(f"    executor = '{executor}'\n")
-        f.write("}\n\n")
+        ## Executor options
+        if executor is not "none":
+            f.write("process {\n")
+            if executor is not "none":
+                f.write(f"    executor = '{executor}'\n")
+            f.write("}\n\n")
