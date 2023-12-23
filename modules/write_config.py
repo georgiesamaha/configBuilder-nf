@@ -26,10 +26,10 @@ def write_config(executor, container, module_results=None):
     with open(output_file, "w") as f:
         f.write("// Custom Nextflow config file \n\n")
 
-        if executor is not "none":
-          f.write("process {\n")
-          f.write(f"    executor = '{executor}'\n")
-          f.write("}\n\n")
+        if executor != "none":
+            f.write("process {\n")
+            f.write(f"    executor = '{executor}'\n")
+            f.write("}\n\n")
 
         if container is not False:
             f.write(container["container_options"] + ".enabled = true\n")
