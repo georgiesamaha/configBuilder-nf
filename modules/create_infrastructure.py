@@ -15,7 +15,7 @@ def create_infrastructure():
         inquirer.List(
             "executor_env",
             message="What type of execution environment are you working in?",
-            choices=["hpc", "local", "cloud"],
+            choices=["hpc", "local"],
         ),
     ]
     answers = inquirer.prompt(execution_env_question)
