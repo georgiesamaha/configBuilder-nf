@@ -8,7 +8,7 @@ import os
 init(autoreset=True)
 
 
-def write_config(executor, module_results=None):
+def write_config(executor, container, module_results=None):
     """
     Write the user's specifications to variables inside the config template below and output to a text file.
     """
@@ -26,16 +26,12 @@ def write_config(executor, module_results=None):
     with open(output_file, "w") as f:
         f.write("// Custom Nextflow config file \n\n")
 
-        ## container options
-        if module_results.get("singularity"):
-            f.write("singularity {\n")
-            f.write("    enabled = true\n")
-            # f.write(f"    NXF_SINGULARITY_CACHEDIR = {singularity_cache} \n")
+        if executor != "none":
+            f.write("process {\n")
+            f.write(f"    executor = '{executor}'\n")
             f.write("}\n\n")
 
-        ## Executor options
-        if executor is not "none":
-            f.write("process {\n")
-            if executor is not "none":
-                f.write(f"    executor = '{executor}'\n")
-            f.write("}\n\n")
+        if container is not False:
+            f.write(container["container_options"] + ".enabled = true\n")
+            if container["container_options"] in ["singularity", "apptainer"]:
+                f.write(container["container_options"] + ".autoMounts = true\n")
