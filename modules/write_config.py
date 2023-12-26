@@ -8,7 +8,7 @@ import os
 init(autoreset=True)
 
 
-def write_config(executor, container, module_results=None):
+def write_config(executor, container, params, module_results=None):
     """
     Write the user's specifications to variables inside the config template below and output to a text file.
     """
@@ -25,6 +25,9 @@ def write_config(executor, container, module_results=None):
 
     with open(output_file, "w") as f:
         f.write("// Custom Nextflow config file \n\n")
+
+        ## TODO: Write params objects
+        if ???????????????????????????????????
 
         if executor != "none":
             f.write("process {\n")

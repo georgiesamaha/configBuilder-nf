@@ -46,7 +46,7 @@ def check_scheduler():
             detected_scheduler = "none"
 
     if detected_scheduler == "none":
-        print(Fore.YELLOW + "...no scheduling system detected.")
+        print(Fore.YELLOW + "...no scheduling system detected.\n")
 
     return detected_scheduler
 
@@ -67,7 +67,7 @@ def check_modules():
         output = result.stdout.decode("utf-8").strip()
 
         if "Modules Release" in output:
-            print(Fore.GREEN + "Modules system detected.")
+            print(Fore.GREEN + "Modules system detected.\n")
 
             result = subprocess.run(
                 "module avail",
@@ -87,7 +87,7 @@ def check_modules():
             return {"singularity": False}
 
         else:
-            print(Fore.YELLOW + "...no modules system detected.")
+            print(Fore.YELLOW + "...no modules system detected.\n")
             return {"not_detected": True}
 
     except Exception as e:
