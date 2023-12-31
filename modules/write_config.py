@@ -26,7 +26,6 @@ def write_config(executor, container, params, module_results=None):
     with open(output_file.replace(" ", "_") + ".config", "w") as f:
         f.write("// Custom config file for " + output_file + "\n\n")
 
-        ## TODO: Write params objects
         if not all([i == "" for i in list(params.values())]):
             for i in params:
                 if params[i] != "":
