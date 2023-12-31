@@ -56,5 +56,21 @@ def question_config_owner():
 
         url_answer = inquirer.prompt(nfcore_question_url)
         param_ownerurl = url_answer["nfcore_ownerurl"]
+    else:
+        param_ownerurl = ""
 
-    return {"name": param_ownername, "handle": param_ownerhandle, "url": param_ownerurl}
+    if param_ownername != "" and param_ownerhandle != "":
+        param_contact = (
+            param_ownername + " (@" + param_ownerhandle.removeprefix("@") + ")"
+        )
+    elif param_ownername != "" and param_ownerhandle == "":
+        param_contact = param_ownername
+    elif param_ownername == "" and param_ownerhandle != "":
+        param_contact = "@" + param_ownerhandle.removeprefix("@")
+    else:
+        param_contact = ""
+
+    return {
+        "config_profile_contact": param_contact,
+        "config_profile_url": param_ownerurl,
+    }

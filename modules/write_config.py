@@ -17,17 +17,21 @@ def write_config(executor, container, params, module_results=None):
         [
             inquirer.Text(
                 "output_file",
-                message="What do you want your custom config file to be called?",
-                default="custom_nextflow.config",
+                message="What is the name of the config?",
+                default="custom_nextflow",
             )
         ]
     )["output_file"]
 
-    with open(output_file, "w") as f:
-        f.write("// Custom Nextflow config file \n\n")
+    with open(output_file.replace(" ", "_") + ".config", "w") as f:
+        f.write("// Custom config file for " + output_file + "\n\n")
 
         ## TODO: Write params objects
-        if ???????????????????????????????????
+        if not all([i == "" for i in list(params.values())]):
+            for i in params:
+                if params[i] != "":
+                    f.write("params." + i + " = '" + params[i] + "'\n")
+            f.write("\n")
 
         if executor != "none":
             f.write("process {\n")
