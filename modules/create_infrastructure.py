@@ -45,9 +45,21 @@ def create_infrastructure():
     print(Fore.YELLOW + "Checking for available software environment software...")
     container_results = create_container_scope()
 
+    # Enable post run clean up
+    cleanup_input = inquirer.prompt(
+        [
+            inquirer.Confirm(
+                "cleanup",
+                message="Do you want to enable cleanup of work directory on successful completion of a run? Note: this will break -resume!",
+                default=False,
+            )
+        ]
+    )["cleanup"]
+
     # Write preferences to custom config
     # TODO pass all relevant variables to this function
     write_config(
+        cleanup_input,
         executor=scheduler_name,
         module_results=module_results,
         container=container_results,
