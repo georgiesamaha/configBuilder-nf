@@ -8,7 +8,7 @@ import os
 init(autoreset=True)
 
 
-def write_config(executor, container, module_results=None):
+def write_config(cleanup_input, executor, container, module_results=None):
     """
     Write the user's specifications to variables inside the config template below and output to a text file.
     """
@@ -35,3 +35,6 @@ def write_config(executor, container, module_results=None):
             f.write(container["container_options"] + ".enabled = true\n")
             if container["container_options"] in ["singularity", "apptainer"]:
                 f.write(container["container_options"] + ".autoMounts = true\n")
+
+        if cleanup_input:
+            f.write("cleanup = true\n")
