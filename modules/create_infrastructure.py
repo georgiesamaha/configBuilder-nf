@@ -19,12 +19,11 @@ init(autoreset=True)
 def create_infrastructure():
     ## Basic information
     nfcore_config = is_nfcore()
+    nfcore_params = None
 
     ## Config description and resources
-    if nfcore_config:
+    if nfcore_config["nfcore_question"]:
         nfcore_params = question_config_owner()
-        detected_resoureces = retrieve_computational_resources()
-        nfcore_resources = question_max_resources(detected_resoureces)
 
     ## Infrastructure type
     execution_env_question = [
@@ -54,6 +53,12 @@ def create_infrastructure():
 
     print(Fore.YELLOW + "Checking for available software environment software...")
     container_results = create_container_scope()
+
+    # Maximum resources (asked regardless if HPC or local)
+    if nfcore_config["nfcore_question"]:
+        detected_resources = retrieve_computational_resources()
+        nfcore_resources = question_max_resources(detected_resources)
+        nfcore_params.update(nfcore_resources)
 
     # Enable post run clean up
     cleanup_input = inquirer.prompt(

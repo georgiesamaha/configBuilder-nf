@@ -120,10 +120,15 @@ def question_max_resources(defaults):
     nfcore_question_maxtime = [
         inquirer.Text(
             "nfcore_maxtime",
-            message="What is the maximum walltime that your infrastructure has available in hours (e.g. of the largest node accessible by all users of a HPC). If no walltime, leave default?",
+            message="What is the maximum walltime that your infrastructure has available in hours (e.g. of the largest node accessible by all users of a HPC)?",
             default="24",
         )
     ]
     maxtime = inquirer.prompt(nfcore_question_maxtime)
 
-    return {"max_cpus": maxcpu, "max_memory": maxmemory, "max_time": maxtime}
+    ## Include some input sanitisation to ensure correct suffix and no suffix duplicates
+    return {
+        "max_cpus": maxcpus["nfcore_maxcpus"],
+        "max_memory": maxmemory["nfcore_maxmemory"].removeprefix(".GB") + ".GB",
+        "max_time": maxtime["nfcore_maxtime"].removeprefix(".h") + ".h",
+    }
