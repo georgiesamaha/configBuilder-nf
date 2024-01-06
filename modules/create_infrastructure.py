@@ -14,7 +14,7 @@ init(autoreset=True)
 def create_infrastructure():
     nfcore_config = is_nfcore()
 
-    if nfcore_config:
+    if nfcore_config["nfcore_question"]:
         nfcore_params = question_config_owner()
 
     execution_env_question = [
