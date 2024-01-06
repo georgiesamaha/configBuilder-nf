@@ -32,7 +32,7 @@ container_options = detect_containers()
 
 def create_container_scope(options=container_options):
     if not container_options:
-        print(Fore.YELLOW + "...no software environment systems detected.")
+        print(Fore.YELLOW + "...no software environment systems detected.\n")
         question = [
             inquirer.Confirm(
                 "container_manual_selection",
@@ -57,7 +57,7 @@ def create_container_scope(options=container_options):
             Fore.YELLOW
             + "..."
             + str(len(container_options))
-            + " software environment systems detected."
+            + " software environment systems detected.\n"
         )
         question = [
             inquirer.List(
