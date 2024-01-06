@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 
-from .create_params import is_nfcore, question_config_owner
+from .create_params import (
+    is_nfcore,
+    question_config_owner,
+    retrieve_computational_resources,
+    question_max_resources,
+)
 from .create_hpc_env import check_scheduler, check_modules
 from .write_config import write_config
 from colorama import Fore, Style, init
@@ -12,11 +17,16 @@ init(autoreset=True)
 
 
 def create_infrastructure():
+    ## Basic information
     nfcore_config = is_nfcore()
 
+    ## Config description and resources
     if nfcore_config:
         nfcore_params = question_config_owner()
+        detected_resoureces = retrieve_computational_resources()
+        nfcore_resources = question_max_resources(detected_resoureces)
 
+    ## Infrastructure type
     execution_env_question = [
         inquirer.List(
             "executor_env",
