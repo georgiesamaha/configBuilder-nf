@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from .create_params import is_nfcore, question_config_owner
 from .create_hpc_env import check_scheduler, check_modules
 from .write_config import write_config
 from colorama import Fore, Style, init
@@ -11,6 +12,11 @@ init(autoreset=True)
 
 
 def create_infrastructure():
+    nfcore_config = is_nfcore()
+
+    if nfcore_config["nfcore_question"]:
+        nfcore_params = question_config_owner()
+
     execution_env_question = [
         inquirer.List(
             "executor_env",
@@ -25,14 +31,14 @@ def create_infrastructure():
     module_results = None  # Save name of module if found
 
     # Printing the selected environment
-    print(f"You selected: {executor_env}")
+    print(f"You selected: {executor_env}.\n")
 
     # Infra-type specific options (in future could add cloud e.g. for AWS specific scopes)
     if executor_env == "hpc":
         scheduler_name = check_scheduler()
         module_results = check_modules()
         if scheduler_name != "none":
-            print(f"The detected job scheduler is: {scheduler_name}")
+            print(f"The detected job scheduler is: {scheduler_name}.\n")
     else:
         pass
 
@@ -57,4 +63,5 @@ def create_infrastructure():
         executor=scheduler_name,
         module_results=module_results,
         container=container_results,
+        params=nfcore_params,
     )
