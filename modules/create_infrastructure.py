@@ -56,7 +56,10 @@ def create_infrastructure():
 
     # Maximum resources (asked regardless if HPC or local)
     if nfcore_config["nfcore_question"]:
-        detected_resources = retrieve_computational_resources()
+        if executor_env == "local":
+            detected_resources = retrieve_computational_resources()
+        else:
+            detected_resources = {"max_cpus": "", "max_memory": ""}
         nfcore_resources = question_max_resources(detected_resources)
         nfcore_params.update(nfcore_resources)
 
