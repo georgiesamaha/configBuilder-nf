@@ -53,13 +53,15 @@ def create_infrastructure():
 
     print(Fore.YELLOW + "Checking for available software environment software...")
     container_results = create_container_scope()
+    print(f"You selected: {container_results['container_options']}.\n")
 
     # Maximum resources (asked regardless if HPC or local)
     if nfcore_config["nfcore_question"]:
         if executor_env == "local":
             detected_resources = retrieve_computational_resources()
         else:
-            detected_resources = {"max_cpus": "", "max_memory": ""}
+            ## TODO try to automate detection from scheduler?
+            detected_resources = {"max_cpus": 4, "max_memory": 32}
         nfcore_resources = question_max_resources(detected_resources)
         nfcore_params.update(nfcore_resources)
 

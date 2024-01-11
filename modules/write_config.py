@@ -30,7 +30,7 @@ def write_config(cleanup_input, executor, container, params=None, module_results
             if not all([i == "" for i in list(params.values())]):
                 for i in params:
                     if params[i] != "":
-                        f.write("params." + i + " = '" + params[i] + "'\n")
+                        f.write("params." + i + " = " + params[i] + "\n")
                 f.write("\n")
 
         if executor != "none":
