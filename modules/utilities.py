@@ -26,4 +26,5 @@ def create_tool_options(options):
     for i in options:
         if check_tool_on_path(i):
             available.add(i)
-    return available
+
+    return sorted(available)
