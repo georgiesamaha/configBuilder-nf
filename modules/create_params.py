@@ -83,7 +83,9 @@ def question_config_owner():
         "config_profile_url": param_ownerurl,
     }
 
-
+# Validate input is integer for max resources
+def validate_integer(_, val):
+    return val.isdigit()
 ## Resources information
 def retrieve_computational_resources():
     """
@@ -104,6 +106,7 @@ def question_max_resources(defaults):
             "nfcore_maxcpus",
             message="What is the maximum number of CPUs your infrastructure has available (e.g. on your machine, or the largest node accessible by all users of a HPC)?",
             default=defaults["max_cpus"],
+        validate=validate_integer,
         )
     ]
     maxcpus = inquirer.prompt(nfcore_question_maxcpus)
@@ -113,6 +116,7 @@ def question_max_resources(defaults):
             "nfcore_maxmemory",
             message="What is the maximum RAM that your infrastructure has available in GB (e.g. on your machine, or of the largest node accessible by all users of a HPC)?",
             default=int(round(defaults["max_memory"], 0)),
+        validate=validate_integer,
         )
     ]
     maxmemory = inquirer.prompt(nfcore_question_maxmemory)
@@ -122,6 +126,7 @@ def question_max_resources(defaults):
             "nfcore_maxtime",
             message="What is the maximum walltime that your infrastructure has available in hours (e.g. of the largest node accessible by all users of a HPC)?",
             default="24",
+        validate=validate_integer,
         )
     ]
     maxtime = inquirer.prompt(nfcore_question_maxtime)
