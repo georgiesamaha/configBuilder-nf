@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 
-from .create_params import is_nfcore, question_config_owner
+from .create_params import (
+    is_nfcore,
+    question_config_owner,
+    retrieve_computational_resources,
+    question_max_resources,
+)
 from .create_hpc_env import check_scheduler, check_modules
 from .write_config import write_config
 from colorama import Fore, Style, init
@@ -12,11 +17,15 @@ init(autoreset=True)
 
 
 def create_infrastructure():
+    ## Basic information
     nfcore_config = is_nfcore()
+    nfcore_params = None
 
+    ## Config description and resources
     if nfcore_config["nfcore_question"]:
         nfcore_params = question_config_owner()
 
+    ## Infrastructure type
     execution_env_question = [
         inquirer.List(
             "executor_env",
@@ -44,6 +53,17 @@ def create_infrastructure():
 
     print(Fore.YELLOW + "Checking for available software environment software...")
     container_results = create_container_scope()
+    print(f"You selected: {container_results['container_options']}.\n")
+
+    # Maximum resources (asked regardless if HPC or local)
+    if nfcore_config["nfcore_question"]:
+        if executor_env == "local":
+            detected_resources = retrieve_computational_resources()
+        else:
+            ## TODO try to automate detection from scheduler?
+            detected_resources = {"max_cpus": 4, "max_memory": 32}
+        nfcore_resources = question_max_resources(detected_resources)
+        nfcore_params.update(nfcore_resources)
 
     # Enable post run clean up
     cleanup_input = inquirer.prompt(

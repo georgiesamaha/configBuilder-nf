@@ -8,7 +8,7 @@ import os
 init(autoreset=True)
 
 
-def write_config(cleanup_input, executor, container, params, module_results=None):
+def write_config(cleanup_input, executor, container, params=None, module_results=None):
     """
     Write the user's specifications to variables inside the config template below and output to a text file.
     """
@@ -26,11 +26,12 @@ def write_config(cleanup_input, executor, container, params, module_results=None
     with open(output_file.replace(" ", "_") + ".config", "w") as f:
         f.write("// Custom config file for " + output_file + "\n\n")
 
-        if not all([i == "" for i in list(params.values())]):
-            for i in params:
-                if params[i] != "":
-                    f.write("params." + i + " = '" + params[i] + "'\n")
-            f.write("\n")
+        if params:
+            if not all([i == "" for i in list(params.values())]):
+                for i in params:
+                    if params[i] != "":
+                        f.write("params." + i + " = " + params[i] + "\n")
+                f.write("\n")
 
         if executor != "none":
             f.write("process {\n")
