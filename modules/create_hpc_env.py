@@ -23,6 +23,8 @@ def check_scheduler():
         "slurm": "sinfo --version",
     }
 
+    detected_scheduler = "none"
+
     # Test various scheduler help commands to identify which is running
     for scheduler, cmd in commands.items():
         try:
@@ -30,14 +32,14 @@ def check_scheduler():
 
             # Run the commands and capture the output
             result = subprocess.run(
-                cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE
+                cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
             )
             output = result.stdout.decode("utf-8").strip()
             # print(f"Output for {scheduler}: {output}")
 
             if scheduler == "pbspro" and "pbs_version" in output:
                 detected_scheduler = "pbspro"
-            elif scheduler == "sge" and "usage: qstat" in output:
+            elif scheduler == "sge" and "qstat" in output:
                 detected_scheduler = "sge"
             elif scheduler == "slurm" and result.returncode == 0:
                 detected_scheduler = "slurm"
