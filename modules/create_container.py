@@ -39,39 +39,37 @@ container_options = detect_containers()
 
 def detect_cachedirs(options=nxf_software_cachedirs):
     cachedir_options = create_cachedir_options(options)
-
+    print(cachedir_options)
     return cachedir_options
 
 
 cachedir_options = detect_cachedirs()
 
-print(cachedir_options)
-
 
 def create_container_scope(
     cont_options=container_options, cach_options=cachedir_options
 ):
-    if not container_options:
+    if not cont_options:
         print(Fore.YELLOW + "...no software environment systems detected.\n")
-        question = [
+        cont_question = [
             inquirer.Confirm(
                 "container_manual_selection",
                 message="Would you like to manually select a software environment?",
             )
         ]
-        manual_question = inquirer.prompt(question)
+        manual_cont_question = inquirer.prompt(cont_question)
 
-        if manual_question["container_manual_selection"]:
-            question = [
+        if manual_cont_question["container_manual_selection"]:
+            cont_selection_question = [
                 inquirer.List(
                     "container_options",
                     message="Which software environment system would you like to use?",
                     choices=nxf_software_management,
                 )
             ]
-            answer = inquirer.prompt(question)
+            cont_answer = inquirer.prompt(cont_selection_question)
         else:
-            answer = False
+            cont_answer = False
     else:
         print(
             Fore.YELLOW
@@ -79,16 +77,52 @@ def create_container_scope(
             + str(len(container_options))
             + " software environment systems detected.\n"
         )
-        question = [
+        cont_selection_question = [
             inquirer.List(
                 "container_options",
                 message="Which software environment system would you like to use?",
                 choices=cont_options,
             )
         ]
-        answer = inquirer.prompt(question)
+        cont_answer = inquirer.prompt(cont_selection_question)
 
-    print(cach_options)
-    cach_options
+    print(cachedir_options)
 
-    return answer
+    if not cach_options:
+        print(Fore.YELLOW + "...no software environment cache directories detected.\n")
+        cach_question = [
+            inquirer.Confirm(
+                "cachedir_manual_selection",
+                message="Would you like to manually select a software environment cache directory?",
+            )
+        ]
+        manual_cach_question = inquirer.prompt(cach_question)
+
+        if manual_cach_question["cachedir_manual_selection"]:
+            cach_selection_question = [
+                inquirer.List(
+                    "cachedir_options",
+                    message="Which software environment cache or container image directory would you like to use?",
+                    choices=nxf_software_cachedirs,
+                )
+            ]
+            cach_answer = inquirer.prompt(cach_selection_question)
+        else:
+            cach_answer = False
+    else:
+        print(
+            Fore.YELLOW
+            + "..."
+            + str(len(container_options))
+            + " software environment systems detected.\n"
+        )
+        cach_selection_question = [
+            inquirer.List(
+                "container_options",
+                message="Which software environment system would you like to use?",
+                choices=cach_options,
+            )
+        ]
+        cont_answer = inquirer.prompt(cach_selection_question)
+
+    return [cont_answer, cach_answer]

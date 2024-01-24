@@ -22,6 +22,7 @@ def check_var_in_env(var):
     """
     status = os.getenv(var)
     result = status  ## 127 means not found, everything else implies exists, we make assumption it's working
+    print(result)
     return result
 
 
