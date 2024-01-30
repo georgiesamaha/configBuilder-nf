@@ -40,7 +40,7 @@ def create_tool_options(options):
     for i in options:
         if check_tool_on_path(i):
             available.add(i)
-    return available
+    return sorted(available)
 
 
 def create_cachedir_options(options):
@@ -53,4 +53,4 @@ def create_cachedir_options(options):
     for i in options:
         if check_var_in_env(i):
             available.add(i)
-    return available
+    return sorted(available)
