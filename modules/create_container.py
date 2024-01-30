@@ -19,18 +19,17 @@ nxf_software_management = (
     "shifter",
 )
 
-nxf_software_cachedirs = [
-    "NXF_CHARLIECLOUD_CACHEDIR",
-    "NXF_CONDA_CACHEDIR",
-    "NXF_SINGULARITY_CACHEDIR",
-    "NXF_APPTAINER_CACHEDIR",
-]
+nxf_software_cachedirs = {
+    "charliecloud": "NXF_CHARLIECLOUD_CACHEDIR",
+    "conda": "NXF_CONDA_CACHEDIR",
+    "singularity": "NXF_SINGULARITY_CACHEDIR",
+    "apptainer": "NXF_APPTAINER_CACHEDIR",
+}
 
 
 ## TODO: extend to instead use module detection system if available
 def detect_containers(options=nxf_software_management):
     container_options = create_tool_options(options)
-
     return container_options
 
 
@@ -42,12 +41,10 @@ def detect_cachedirs(options=nxf_software_cachedirs):
     return cachedir_options
 
 
-cachedir_options = detect_cachedirs()
+cache_options = detect_cachedirs()
 
 
-def create_container_scope(
-    cont_options=container_options, cach_options=cachedir_options
-):
+def create_container_scope(cont_options=container_options, cach_options=cache_options):
     if not cont_options:
         print(Fore.YELLOW + "...no software environment systems detected.\n")
         cont_question = [
@@ -85,41 +82,60 @@ def create_container_scope(
         ]
         cont_answer = inquirer.prompt(cont_selection_question)
 
-    if not cach_options:
-        print(Fore.YELLOW + "...no software environment cache directories detected.\n")
-        cach_question = [
-            inquirer.Confirm(
-                "cachedir_manual_selection",
-                message="Would you like to manually specify a software environment cache directory?",
-            )
-        ]
-        manual_cach_question = inquirer.prompt(cach_question)
+    cach_question = [
+        inquirer.Confirm(
+            "cachedir_manual_selection",
+            message="Would you like to manually specify a software environment cache directory?",
+        )
+    ]
+    manual_cach_question = inquirer.prompt(cach_question)
 
-        if manual_cach_question["cachedir_manual_selection"]:
-            cach_selection_question = [
-                inquirer.Text(
-                    "cachedir_options",
-                    message="Please specify the directory you wish to cache environments or images (must exist).",
-                    validate=check_dir_exists,
-                )
-            ]
-            cach_answer = inquirer.prompt(cach_selection_question)
-        else:
-            cach_answer = False
-    else:
+    if manual_cach_question["cachedir_manual_selection"]:
         print(
             Fore.YELLOW
-            + "..."
-            + str(len(container_options))
-            + " software environment systems detected.\n"
+            + "Checking for existing cache directories of selected software environment or container engine..."
         )
-        cach_selection_question = [
-            inquirer.List(
-                "container_options",
-                message="Which software environment system would you like to use?",
-                choices=cach_options,
-            )
+        cache_detection_results = nxf_software_cachedirs[
+            cont_answer["container_options"]
         ]
-        cont_answer = inquirer.prompt(cach_selection_question)
+        detected_cache = cach_options[cache_detection_results]
+
+        ## TODO Print message whether result has been found or not, then ask if user is happy
+
+    ## TODO: NEW STRUCTURE
+
+    ## Q: Would you like to use a cache?
+    ##      If yes
+    ##          AUTODETECT CACHE NOW OR SAY SEARCHING
+    ##          Based on your env/software selection, we detected the following, would you like you use it? (default: detected)
+    ##              If yes:
+    ##                  cache_answer = result
+    ##              If no:
+    ##                  Please specify a new cache location (+ validate)
+    ##                  cache_answer = result
+    ##      If no
+    ##          cache_answer = False
+
+    # if not cach_options:
+    #     print(Fore.YELLOW + "...no software environment cache directories detected.\n")
+    #     cach_question = [
+    #         inquirer.Confirm(
+    #             "cachedir_manual_selection",
+    #             message="Would you like to manually specify a software environment cache directory?",
+    #         )
+    #     ]
+    #     manual_cach_question = inquirer.prompt(cach_question)
+
+    #     if manual_cach_question["cachedir_manual_selection"]:
+    #         cach_selection_question = [
+    #             inquirer.Text(
+    #                 "cachedir_options",
+    #                 message="Please specify the directory you wish to cache environments or images (must exist).",
+    #                 validate=check_dir_exists,
+    #             )
+    #         ]
+    #         cach_answer = inquirer.prompt(cach_selection_question)
+    #     else:
+    #         cach_answer = False
 
     return [cont_answer, cach_answer]

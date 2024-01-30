@@ -58,6 +58,3 @@ def create_cachedir_options(options):
         if check_var_in_env(i):
             available[i] = os.getenv(i)
     return available
-
-
-create_cachedir_options(nxf_software_cachedirs)
