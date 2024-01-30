@@ -28,8 +28,10 @@ def check_var_in_env(var):
 
 def check_dir_exists(_, path):
     if not os.path.isdir(path):
-        raise errors.ValidationError('', reason='The specified directory does not exist. Please try again.') 
-    return True 
+        raise errors.ValidationError(
+            "", reason="The specified directory does not exist. Please try again."
+        )
+    return True
 
 
 def create_tool_options(options):
@@ -51,8 +53,11 @@ def create_cachedir_options(options):
 
     This reduced list can then be used to offer 'valid' options to the user.
     """
-    available = set()
-    for i in options:
+    available = dict()
+    for i in options.values():
         if check_var_in_env(i):
-            available.add(i)
-    return sorted(available)
+            available[i] = os.getenv(i)
+    return available
+
+
+create_cachedir_options(nxf_software_cachedirs)
