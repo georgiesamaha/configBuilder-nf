@@ -39,7 +39,6 @@ container_options = detect_containers()
 
 def detect_cachedirs(options=nxf_software_cachedirs):
     cachedir_options = create_cachedir_options(options)
-    print(cachedir_options)
     return cachedir_options
 
 
@@ -86,25 +85,21 @@ def create_container_scope(
         ]
         cont_answer = inquirer.prompt(cont_selection_question)
 
-    print(cachedir_options)
-
     if not cach_options:
         print(Fore.YELLOW + "...no software environment cache directories detected.\n")
         cach_question = [
             inquirer.Confirm(
                 "cachedir_manual_selection",
-                message="Would you like to manually select a software environment cache directory?",
+                message="Would you like to manually specify a software environment cache directory?",
             )
         ]
         manual_cach_question = inquirer.prompt(cach_question)
 
-        ## TODO: add function to check the parent location exists
         if manual_cach_question["cachedir_manual_selection"]:
             cach_selection_question = [
-                inquirer.List(
+                inquirer.Text(
                     "cachedir_options",
-                    message="Which software environment cache or container image directory would you like to use?",
-                    choices=nxf_software_cachedirs,
+                    message="Please specify the directory you wish to cache environments or images (must exist).",
                     validate=check_dir_exists,
                 )
             ]

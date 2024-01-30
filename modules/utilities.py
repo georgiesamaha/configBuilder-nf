@@ -3,6 +3,7 @@
 import os
 import sys
 import subprocess
+from inquirer import errors
 
 
 def check_tool_on_path(tool):
@@ -22,12 +23,13 @@ def check_var_in_env(var):
     """
     status = os.getenv(var)
     result = status  ## 127 means not found, everything else implies exists, we make assumption it's working
-    print(result)
     return result
 
 
 def check_dir_exists(_, path):
-    return os.path.isfile(path)
+    if not os.path.isdir(path):
+        raise errors.ValidationError('', reason='The specified directory does not exist. Please try again.') 
+    return True 
 
 
 def create_tool_options(options):
