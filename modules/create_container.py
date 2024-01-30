@@ -4,7 +4,7 @@ import subprocess
 import os
 import inquirer
 from colorama import Fore, Style, init
-from .utilities import create_tool_options, create_cachedir_options
+from .utilities import create_tool_options, create_cachedir_options, check_dir_exists
 
 ## TODO: consider how to address `module` environment detection here
 
@@ -98,12 +98,14 @@ def create_container_scope(
         ]
         manual_cach_question = inquirer.prompt(cach_question)
 
+        ## TODO: add function to check the parent location exists
         if manual_cach_question["cachedir_manual_selection"]:
             cach_selection_question = [
                 inquirer.List(
                     "cachedir_options",
                     message="Which software environment cache or container image directory would you like to use?",
                     choices=nxf_software_cachedirs,
+                    validate=check_dir_exists,
                 )
             ]
             cach_answer = inquirer.prompt(cach_selection_question)

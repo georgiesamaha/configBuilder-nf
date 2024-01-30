@@ -26,6 +26,10 @@ def check_var_in_env(var):
     return result
 
 
+def check_dir_exists(_, path):
+    return os.path.isfile(path)
+
+
 def create_tool_options(options):
     """
     Produces a list of 'valid' entries in a set, i.e., when running check_tool_on_path it will keep everything that has been evaluated to true.
