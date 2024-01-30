@@ -93,18 +93,16 @@ def create_container_scope(
         cach_question = [
             inquirer.Confirm(
                 "cachedir_manual_selection",
-                message="Would you like to manually select a software environment cache directory?",
+                message="Would you like to manually specify a software environment cache directory?",
             )
         ]
         manual_cach_question = inquirer.prompt(cach_question)
 
-        ## TODO: add function to check the parent location exists
         if manual_cach_question["cachedir_manual_selection"]:
             cach_selection_question = [
-                inquirer.List(
+                inquirer.Text(
                     "cachedir_options",
-                    message="Which software environment cache or container image directory would you like to use?",
-                    choices=nxf_software_cachedirs,
+                    message="Please specify the directory you wish to cache environments or images (must exist).",
                     validate=check_dir_exists,
                 )
             ]
