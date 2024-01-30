@@ -39,7 +39,6 @@ container_options = detect_containers()
 
 def detect_cachedirs(options=nxf_software_cachedirs):
     cachedir_options = create_cachedir_options(options)
-    print(cachedir_options)
     return cachedir_options
 
 
@@ -85,8 +84,6 @@ def create_container_scope(
             )
         ]
         cont_answer = inquirer.prompt(cont_selection_question)
-
-    print(cachedir_options)
 
     if not cach_options:
         print(Fore.YELLOW + "...no software environment cache directories detected.\n")
