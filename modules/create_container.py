@@ -158,4 +158,5 @@ def create_container_scope(cont_options=container_options, cach_options=cache_op
     else:
         cach_answer = None
 
+    ## TODO how to export this to create_infrastructure, and for writing?
     return cont_answer
