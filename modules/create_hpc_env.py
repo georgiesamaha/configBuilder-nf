@@ -52,41 +52,65 @@ def check_scheduler():
 
     return detected_scheduler
 
+import inquirer
+
 def check_queues(detected_scheduler):
     """
     Detect available job queues for auto-detected scheduler (SGE, PBSpro, SLURM). 
     """
-    detected_queues = "none" 
+    detected_queues = []
+
     print(Fore.YELLOW + "Checking for available queues...\n")
     
     if detected_scheduler == "pbspro":
         cmd = "qstat -Q"
         result = subprocess.run(
-                cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
             )
         output = result.stdout.decode("utf-8").strip()
         detected_queues = [line.split()[0] for line in output.split('\n')[2:] if line.strip()]
 
-        if detected_queues:
-            print(Fore.GREEN + "Found queues...")
+    elif detected_scheduler == "sge":
+        # TODO fix results,  
+        cmd = "qconf -sql"
+        result = subprocess.run(
+            cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            )
+        output = result.stdout.decode("utf-8").strip() # untested
+        detected_queues = output.split('\n') # TODO untested, will need change
+        pass
 
-            # Prompt user to select a queue
-            queue_question = [
-                inquirer.List(
-                    "selected_queue",
-                    message="Which queue do you want to execute your processes?",
-                    choices=detected_queues
-                )
-            ]
-            answers = inquirer.prompt(queue_question)
-            selected_queue = answers["selected_queue"]
+    elif detected_scheduler == "slurm":
+        # TODO confirm this actually works 
+        cmd = "sinfo --format=%P,%c,%m,%l"
+        result = subprocess.run(
+            cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            )
+        output = result.stdout.decode("utf-8").strip() # untested
+        detected_queues = output.split('\n') # TODO untested, will need to change
+        pass
 
-            print("Selected queue:", selected_queue)
-            return selected_queue
-        else:
-            print(Fore.YELLOW + "No queues found.")
-        #print(Fore.GREEN + "Queues: {detected_queues} detected.\n")
+    if detected_queues:
+        print(Fore.GREEN + "Found queues!")
+
+        # Prompt user to select a queue
+        queue_question = [
+            inquirer.List(
+                "selected_queue",
+                message="Which job queue would you like to execute processes?",
+                choices=detected_queues
+            )
+        ]
+        answers = inquirer.prompt(queue_question)
+        selected_queue = answers["selected_queue"]
+
+        print("Selected queue:", selected_queue)
+        return selected_queue
+    else:
+        print(Fore.YELLOW + "No queues found.")
+
     return detected_queues
+
 
 def check_modules():
     """
