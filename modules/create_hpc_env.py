@@ -52,6 +52,16 @@ def check_scheduler():
 
     return detected_scheduler
 
+def check_queues(detected_scheduler):
+    """
+    Detect available job queues for auto-detected scheduler (SGE, PBSpro, SLURM). 
+    """
+    detected_queues = "none" 
+
+    if detected_scheduler != "none":
+        print(Fore.YELLOW + "Checking for available queues...\n")
+    
+    return detected_queues
 
 def check_modules():
     """
