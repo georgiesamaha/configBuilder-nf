@@ -41,7 +41,7 @@ def create_infrastructure():
     executor_env = answers["executor_env"]
 
     scheduler_name = None  # Save name of scheduler if hpc selected
-    queues_list = None # Save list of queues if job scheduler detected 
+    queue_name = None # Save list of queues if job scheduler detected 
     module_results = None  # Save name of module if found
 
     # Printing the selected environment
@@ -52,7 +52,7 @@ def create_infrastructure():
         scheduler_name = check_scheduler()
         if scheduler_name != "none":
             print(f"The detected job scheduler is: {scheduler_name}.\n")
-            queues_list = check_queues(scheduler_name)  # Pass the result of check_scheduler
+            queue_name = check_queues(scheduler_name)  # Pass the result of check_scheduler
         module_results = check_modules()
 
     else:
@@ -88,6 +88,7 @@ def create_infrastructure():
     write_config(
         cleanup_input,
         executor=scheduler_name,
+        queue=queue_name,
         module_results=module_results,
         container=container_results,
         params=nfcore_params,
