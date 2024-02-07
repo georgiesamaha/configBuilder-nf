@@ -50,7 +50,7 @@ def create_infrastructure():
     # Infra-type specific options (in future could add cloud e.g. for AWS specific scopes)
     if executor_env == "hpc":
         scheduler_name = check_scheduler()
-        if scheduler_name == "pbspro":
+        if scheduler_name != "none":
             print(f"The detected job scheduler is: {scheduler_name}.\n")
             queues_list = check_queues(scheduler_name)  # Pass the result of check_scheduler
         module_results = check_modules()
