@@ -71,13 +71,13 @@ def check_queues(detected_scheduler):
         detected_queues = [line.split()[0] for line in output.split('\n')[2:] if line.strip()]
 
     elif detected_scheduler == "sge":
-        # TODO fix results,  
+        # TODO confirm this actually works  
         cmd = "qconf -sql"
         result = subprocess.run(
             cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-            )
-        output = result.stdout.decode("utf-8").strip() # untested
-        detected_queues = output.split('\n') # TODO untested, will need change
+        )
+        output = result.stdout.decode("utf-8").strip()
+        detected_queues = output.split('\n')
         pass
 
     elif detected_scheduler == "slurm":
@@ -85,9 +85,9 @@ def check_queues(detected_scheduler):
         cmd = "sinfo --format=%P,%c,%m,%l"
         result = subprocess.run(
             cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-            )
-        output = result.stdout.decode("utf-8").strip() # untested
-        detected_queues = output.split('\n') # TODO untested, will need to change
+        )
+        output = result.stdout.decode("utf-8").strip()
+        detected_queues = [line.split(',')[0] for line in output.split('\n') if line.strip()] 
         pass
 
     if detected_queues:
