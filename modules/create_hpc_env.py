@@ -71,7 +71,6 @@ def check_queues(detected_scheduler):
         detected_queues = [line.split()[0] for line in output.split('\n')[2:] if line.strip()]
 
     elif detected_scheduler == "sge":
-        # TODO confirm this actually works  
         cmd = "qconf -sql"
         result = subprocess.run(
             cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
