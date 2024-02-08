@@ -108,8 +108,7 @@ def check_queues(detected_scheduler):
         print(Fore.YELLOW + "No queues found.")
 
     return detected_queues
-
-
+    
 def check_modules():
     """
     Check if a module system is being used on the HPC system. If so, load Singularity. Assumes HPC has Singularity.

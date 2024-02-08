@@ -8,7 +8,7 @@ import os
 init(autoreset=True)
 
 
-def write_config(cleanup_input, executor, queue, container, params=None, module_results=None):
+def write_config(cleanup_input, nxf_temp, executor, queue, container, params=None, module_results=None):
     """
     Write the user's specifications to variables inside the config template below and output to a text file.
     """
@@ -46,3 +46,6 @@ def write_config(cleanup_input, executor, queue, container, params=None, module_
 
         if cleanup_input:
             f.write("cleanup = true\n")
+            
+        if nxf_temp:
+            f.write(f"env.NXF_TEMP = '{nxf_temp}'\n")

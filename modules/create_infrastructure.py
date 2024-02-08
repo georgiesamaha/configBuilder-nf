@@ -83,10 +83,34 @@ def create_infrastructure():
         ]
     )["cleanup"]
 
+    # Set NXF_TEMP if user wants 
+    nxf_temp_question = [
+        inquirer.Confirm(
+            'set_nxf_temp',
+            message="Do you want to specify a Nextflow temp directory (NXF_TEMP)?",
+            default=False,
+        )
+    ]
+    answers = inquirer.prompt(nxf_temp_question)
+
+    if answers['set_nxf_temp']:
+        # If user wants to specify NXF_TEMP, ask for the path
+        nxf_temp_path_question = [
+            inquirer.Text(
+                'nxf_temp_path',
+                message="Please enter the path for NXF_TEMP"
+            )
+        ]
+        answers = inquirer.prompt(nxf_temp_path_question)
+        nxf_temp_path = answers['nxf_temp_path']
+    else:
+        nxf_temp_path = None
+
     # Write preferences to custom config
     # TODO pass all relevant variables to this function
     write_config(
         cleanup_input,
+        nxf_temp=nxf_temp_path,
         executor=scheduler_name,
         queue=queue_name,
         module_results=module_results,
