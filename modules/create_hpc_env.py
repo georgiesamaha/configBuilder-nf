@@ -81,7 +81,6 @@ def check_queues(detected_scheduler):
         pass
 
     elif detected_scheduler == "slurm":
-        # TODO confirm this actually works 
         cmd = "sinfo -h --format=%P,%c,%m,%l"
         result = subprocess.run(
             cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
