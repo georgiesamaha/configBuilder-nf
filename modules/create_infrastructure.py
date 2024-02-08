@@ -6,7 +6,11 @@ from .create_params import (
     retrieve_computational_resources,
     question_max_resources,
 )
-from .create_hpc_env import check_scheduler, check_modules
+from .create_hpc_env import (
+    check_scheduler, 
+    check_queues,
+    check_modules,
+)
 from .write_config import write_config
 from colorama import Fore, Style, init
 import inquirer
@@ -37,6 +41,7 @@ def create_infrastructure():
     executor_env = answers["executor_env"]
 
     scheduler_name = None  # Save name of scheduler if hpc selected
+    queue_name = None # Save list of queues if job scheduler detected 
     module_results = None  # Save name of module if found
 
     # Printing the selected environment
@@ -45,9 +50,11 @@ def create_infrastructure():
     # Infra-type specific options (in future could add cloud e.g. for AWS specific scopes)
     if executor_env == "hpc":
         scheduler_name = check_scheduler()
-        module_results = check_modules()
         if scheduler_name != "none":
             print(f"The detected job scheduler is: {scheduler_name}.\n")
+            queue_name = check_queues(scheduler_name)  # Pass the result of check_scheduler
+        module_results = check_modules()
+
     else:
         pass
 
@@ -81,6 +88,7 @@ def create_infrastructure():
     write_config(
         cleanup_input,
         executor=scheduler_name,
+        queue=queue_name,
         module_results=module_results,
         container=container_results,
         params=nfcore_params,
