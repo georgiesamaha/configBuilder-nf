@@ -60,7 +60,6 @@ def create_infrastructure():
 
     print(Fore.YELLOW + "Checking for available software environment software...")
     container_results = create_container_scope()
-    print(f"You selected: {container_results['container_options']}.\n")
 
     # Maximum resources (asked regardless if HPC or local)
     if nfcore_config["nfcore_question"]:

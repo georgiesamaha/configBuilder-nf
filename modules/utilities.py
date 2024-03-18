@@ -3,6 +3,7 @@
 import os
 import sys
 import subprocess
+from inquirer import errors
 
 
 def check_tool_on_path(tool):
@@ -16,6 +17,23 @@ def check_tool_on_path(tool):
     return result
 
 
+def check_var_in_env(var):
+    """
+    Simply checks that an variable exists in the environment
+    """
+    status = os.getenv(var)
+    result = status  ## 127 means not found, everything else implies exists, we make assumption it's working
+    return result
+
+
+def check_dir_exists(_, path):
+    if not os.path.isdir(path):
+        raise errors.ValidationError(
+            "", reason="The specified directory does not exist. Please try again."
+        )
+    return True
+
+
 def create_tool_options(options):
     """
     Produces a list of 'valid' entries in a set, i.e., when running check_tool_on_path it will keep everything that has been evaluated to true.
@@ -26,5 +44,17 @@ def create_tool_options(options):
     for i in options:
         if check_tool_on_path(i):
             available.add(i)
-
     return sorted(available)
+
+
+def create_cachedir_options(options):
+    """
+    Produces a list of 'valid' entries in a set, i.e., when running check_tool_on_path it will keep everything that has been evaluated to true.
+
+    This reduced list can then be used to offer 'valid' options to the user.
+    """
+    available = dict()
+    for i in options.values():
+        if check_var_in_env(i):
+            available[i] = os.getenv(i)
+    return available
